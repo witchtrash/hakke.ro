@@ -10,6 +10,14 @@ interface SplitFlapProps {
   delay?: number;
 }
 
+interface SplitFlapWordProps {
+  word: string;
+  className?: string;
+  speed?: number;
+  delay: number;
+  delaySteps: number;
+}
+
 export const SplitFlap = (props: SplitFlapProps) => {
   const MIN = 31;
   const MAX = 95;
@@ -23,7 +31,6 @@ export const SplitFlap = (props: SplitFlapProps) => {
     if (n === MAX) {
       return n;
     }
-
     const range = MAX - MIN;
     return ((((n - MIN) % range) + range) % range) + MIN;
   };
@@ -52,4 +59,18 @@ export const SplitFlap = (props: SplitFlapProps) => {
   }, []);
 
   return <span className={props.className}>{display}</span>;
+};
+
+export const SplitFlapWord = (props: SplitFlapWordProps) => {
+  const splitFlaps = Array.from(props.word).map((c: string, i: number) => (
+    <SplitFlap
+      key={`split-flap-${c}${i}`}
+      endCharacter={c}
+      speed={props.speed}
+      delay={props.delay + i * props.delaySteps}
+      className={props.className}
+    />
+  ));
+
+  return <React.Fragment>{splitFlaps}</React.Fragment>;
 };

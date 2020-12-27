@@ -9,7 +9,7 @@ interface LayoutProps {
 
 const style = css`
   body {
-    background-color: #fefefe;
+    background-color: #000;
     min-height: 100vh;
   }
 `;
