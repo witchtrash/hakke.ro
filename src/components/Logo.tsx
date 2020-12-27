@@ -1,7 +1,14 @@
 import React from 'react';
 
-export const Logo = () => (
-  <svg width="700" viewBox="0 0 800 200" className="hakkero-text">
+interface LogoProps {
+  className?: string;
+}
+
+export const Logo = (props: LogoProps) => (
+  <svg
+    viewBox="0 0 760 140"
+    className={`hakkero-text ${props.className ?? ''}`}
+  >
     <path
       d="m 54.686,21.607 h -2.55 V 4.777 H 29.7 v 21.93 c -18.02,7.82 -29.07,24.48 -29.07,45.22 0,26.01 12.41,43.52 28.9,60.35 h 22.61 v -89.59 l 2.21,-0.17 c 26.18,0 45.729,24.65 45.729,61.03 v 28.73 h 22.44 V 4.777 h -22.44 v 37.4 C 88.346,29.427 72.706,21.607 54.686,21.607 Z"
       className="text-path stroke h"
