@@ -16,6 +16,7 @@ const style = css`
 
 const Main = styled.main`
   display: flex;
+  flex-direction: column;
   min-height: 100vh;
   align-content: center;
   justify-content: center;
@@ -27,3 +28,11 @@ export const Layout = (props: LayoutProps) => (
     <Main>{props.children}</Main>
   </React.Fragment>
 );
+
+export const Grid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(18, 20px [col]);
+  grid-template-rows: repeat(auto-fit, 20px);
+  height: fit-content;
+  align-self: center;
+`;

@@ -1,0 +1,26 @@
+{
+  "Main": {
+    "stanza": {
+      "type": "StructuredText",
+      "config": {
+        "multi": "paragraph",
+        "label": "Stanza"
+      }
+    },
+    "order": {
+      "type": "Number",
+      "config": {
+        "label": "order"
+      }
+    },
+    "show_on_page": {
+      "type": "Boolean",
+      "config": {
+        "placeholder_false": "Hide",
+        "placeholder_true": "Show",
+        "default_value": true,
+        "label": "Show on page"
+      }
+    }
+  }
+}

@@ -21,6 +21,7 @@
     "dotenv": "^8.2.0",
     "gatsby": "^2.26.1",
     "gatsby-plugin-emotion": "^5.1.0",
+    "gatsby-plugin-typegen": "^2.2.2",
     "gatsby-source-prismic": "^3.3.1",
     "lodash": "^4.17.20",
     "normalize.css": "^8.0.1",

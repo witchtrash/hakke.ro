@@ -68,3 +68,6 @@ yarn-error.log
 .pnp.js
 # Yarn Integrity file
 .yarn-integrity
+
+# Graphql types, generated dynamically
+src/schemas/query-types.d.ts

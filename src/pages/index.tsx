@@ -1,21 +1,16 @@
 import React from 'react';
-import { Layout } from '~/components/Layout';
 import styled from '@emotion/styled';
+import { graphql } from 'gatsby';
+import { Layout, Grid } from '~/components/Layout';
 import { SplitFlapWord } from '~/components/SplitFlap';
-
-const Grid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(24, 20px [col]);
-  grid-template-rows: repeat(auto-fit, 20px);
-  height: fit-content;
-  align-self: center;
-`;
+import { sample } from 'lodash';
 
 const Word = styled(SplitFlapWord)`
   font-family: Courier;
   display: block;
   font-size: 16px;
   text-align: center;
+  text-shadow: 0 0 10px #fff, 0 0 4px #f00;
 
   color: ${props => {
     if (props.word.includes('CARCOSA')) {
@@ -23,14 +18,17 @@ const Word = styled(SplitFlapWord)`
     }
     return '#fff';
   }};
-
-  text-shadow: 0 0 10px #fff, 0 0 4px #f00;
 `;
 
-const Home = () => {
-  const quote = Array.from(
-    `I saw the lake of Hali, thin and blank, without a ripple or wind to stir it, and I saw the towers of Carcosa behind the moon. Aldebaran, the Hyades, Alar, Hastur, glided through the cloud-rifts which fluttered and flapped as they passed like the scolloped tatters of the King in Yellow.`
-  )
+interface HomeProps {
+  data: GatsbyTypes.IndexQuery;
+}
+
+const Home = ({ data }: HomeProps) => {
+  const node = sample(data.allPrismicPoem.edges)?.node;
+  const poem = node?.data?.stanza?.text ?? 'hakke.ro';
+
+  const stanzas = Array.from(poem)
     .map(s => s.toUpperCase())
     .filter(s => {
       const charCode = s.charCodeAt(0);
@@ -39,7 +37,7 @@ const Home = () => {
     .join('')
     .split(' ');
 
-  const splitFlapDisplay = quote.map((s: string, i: number) => (
+  const splitFlapDisplay = stanzas.map((s: string, i: number) => (
     <Word
       word={`${s} `}
       key={`word-${i}`}
@@ -55,5 +53,35 @@ const Home = () => {
     </Layout>
   );
 };
+
+export const query = graphql`
+  query Index {
+    allSite {
+      edges {
+        node {
+          siteMetadata {
+            author
+            description
+            title
+            siteUrl
+          }
+        }
+      }
+    }
+    allPrismicPoem(filter: { data: { show_on_page: { eq: true } } }) {
+      edges {
+        node {
+          data {
+            order
+            show_on_page
+            stanza {
+              text
+            }
+          }
+        }
+      }
+    }
+  }
+`;
 
 export default Home;
