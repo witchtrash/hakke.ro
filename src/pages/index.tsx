@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button } from '~/components/Button';
+import { Logo } from '~/components/Logo';
+import { Layout } from '~/components/Layout';
 
 const Home = () => (
-  <div>
+  <Layout>
     Hello world!
-    <Button text="foo" />
-  </div>
+    <Logo />
+  </Layout>
 );
 
 export default Home;
