@@ -27,5 +27,17 @@ module.exports = {
         outputPath: './src/schemas/query-types.d.ts',
       },
     },
+    {
+      resolve: 'gatsby-plugin-manifest',
+      options: {
+        name: 'hakke.ro',
+        short_name: 'hakke.ro',
+        start_url: '/',
+        background_color: '#ffffff',
+        theme_color: '#ffdda2',
+        icon: 'src/images/icon.png',
+      },
+    },
+    'gatsby-plugin-react-helmet',
   ],
 };
