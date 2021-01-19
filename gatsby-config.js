@@ -35,7 +35,7 @@ module.exports = {
         start_url: '/',
         background_color: '#ffffff',
         theme_color: '#ffdda2',
-        icon: 'src/images/icon.png',
+        icon: 'static/icon.png',
       },
     },
     'gatsby-plugin-react-helmet',

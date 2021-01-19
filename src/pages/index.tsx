@@ -2,9 +2,9 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { graphql } from 'gatsby';
 import { sample } from 'lodash';
-import { Helmet } from 'react-helmet';
 import { Layout, Grid } from '~/components/Layout';
 import { SplitFlapWord } from '~/components/SplitFlap';
+import { SEO } from '~/components/SEO';
 
 const Word = styled(SplitFlapWord)`
   font-family: Courier;
@@ -15,6 +15,12 @@ const Word = styled(SplitFlapWord)`
   color: #fff;
 `;
 
+const StyledGrid = styled(Grid)`
+  @media (max-width: 400px) {
+    grid-template-columns: repeat(12, 20px [col]);
+  }
+`;
+
 interface HomeProps {
   data: GatsbyTypes.IndexQuery;
 }
@@ -22,7 +28,6 @@ interface HomeProps {
 const Home = ({ data }: HomeProps) => {
   const node = sample(data.allPrismicPoem.edges)?.node;
   const poem = node?.data?.stanza?.text ?? 'hakke.ro';
-  const meta = data.allSite.edges[0].node.siteMetadata;
 
   const stanzas = Array.from(poem)
     .map(s => s.toUpperCase())
@@ -45,32 +50,14 @@ const Home = ({ data }: HomeProps) => {
 
   return (
     <Layout>
-      <Helmet>
-        <html lang="en" />
-        <title>{meta?.title ?? 'hakke.ro'}</title>
-        <link rel="canonical" href={meta?.siteUrl ?? 'https://hakke.ro'} />
-        <meta name="author" content={meta?.author ?? 'mari'} />
-        <meta name="description" content={meta?.description ?? 'hakke.ro'} />
-      </Helmet>
-      <Grid>{splitFlapDisplay}</Grid>
+      <SEO />
+      <StyledGrid>{splitFlapDisplay}</StyledGrid>
     </Layout>
   );
 };
 
 export const query = graphql`
   query Index {
-    allSite {
-      edges {
-        node {
-          siteMetadata {
-            author
-            description
-            title
-            siteUrl
-          }
-        }
-      }
-    }
     allPrismicPoem(filter: { data: { show_on_page: { eq: true } } }) {
       edges {
         node {
