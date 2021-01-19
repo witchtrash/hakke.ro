@@ -18,6 +18,7 @@ module.exports = {
         accessToken: process.env.API_ACCESS_TOKEN,
         schemas: {
           poem: require('./src/schemas/poem.json'),
+          blog_post: require('./src/schemas/blog_post.json'),
         },
       },
     },
