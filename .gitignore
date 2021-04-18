@@ -20,17 +20,11 @@ coverage
 # nyc test coverage
 .nyc_output
 
-# Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
-
-# Bower dependency directory (https://bower.io/)
-bower_components
-
 # node-waf configuration
 .lock-wscript
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+build
 
 # Dependency directories
 node_modules/
@@ -55,12 +49,9 @@ typings/
 .env*
 !.env.example
 
-# gatsby files
-.cache/
-public
-
-# Mac files
+# Misc
 .DS_Store
+.sw[op]
 
 # Yarn
 yarn-error.log
@@ -69,5 +60,12 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
-# Graphql types, generated dynamically
-src/schemas/query-types.d.ts
+# Next files
+.next
+
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+.vercel
