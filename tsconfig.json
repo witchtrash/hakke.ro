@@ -15,7 +15,10 @@
     "jsx": "preserve",
     "baseUrl": "./",
     "paths": {
-      "@hakkero/*": ["./src/*"]
+      "@hakkero/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@util/*": ["./src/util/*"],
+      "@pages/*": ["./src/pages/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

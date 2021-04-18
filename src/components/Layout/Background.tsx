@@ -1,8 +1,7 @@
 import styled from '@emotion/styled';
-import { theme } from '~/util/theme';
 import { Container } from './Container';
 
 export const Background = styled(Container)`
-  background-color: ${theme.colors.backgroundLight};
+  background-color: ${props => props.theme.colors.background};
   min-height: 100vh;
 `;

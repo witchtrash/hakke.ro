@@ -1,6 +1,15 @@
 import React from 'react';
-import styled from '@emotion/styled';
+import { Background } from '@components/Layout';
+import { ThemeContext } from '@util/theme';
 
-const Home = () => <React.Fragment />;
+const Index = () => {
+  const { toggleTheme } = React.useContext(ThemeContext);
 
-export default Home;
+  return (
+    <Background>
+      <button onClick={toggleTheme}>toggle!</button>
+    </Background>
+  );
+};
+
+export default Index;

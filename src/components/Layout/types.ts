@@ -1,8 +1,8 @@
-import { WrappedDivProps } from './Container';
+import { ContainerProps } from './Container';
 
 type Flex = 'flex-start' | 'flex-end' | 'center';
 
-export type LayoutProps = Omit<WrappedDivProps, 'fullHeight'>;
+export type LayoutProps = Omit<ContainerProps, 'fullHeight'>;
 
 export type FlexJustify =
   | Flex
