@@ -70,6 +70,14 @@ const Points = ({ count, spaceBetween }: PointsProps) => {
   );
 };
 
+const Camera = () => {
+  return (
+    <React.Fragment>
+      <OrbitControls enablePan={false} enableZoom={false} />
+    </React.Fragment>
+  );
+};
+
 export const Waves = () => {
   return (
     <BackgroundContainer id="canvas-container" fullHeight>
@@ -84,7 +92,7 @@ export const Waves = () => {
           <directionalLight color="red" position={[0, 0, 5]} />
           <Points count={50 * 50} spaceBetween={100} />
         </React.Fragment>
-        <OrbitControls attach="canvas" />
+        <Camera />
       </Canvas>
     </BackgroundContainer>
   );
