@@ -10,6 +10,7 @@ export const Reset = () => (
       html,
       #__next {
         min-height: 100vh;
+        height: 100%;
       }
       div {
         box-sizing: border-box;
