@@ -36,9 +36,16 @@ const App = ({ Component, pageProps }: AppProps) => {
             content="Strange is the night where black stars rise, And strange moons circle through the skies, But stranger still is Lost Carcosa."
             key="og-description"
           />
+          <meta property="og:site_name" content="hakke.ro" />
           <meta property="og:type" content="website" key="og-type" />
           <meta property="og:url" content="https://hakke.ro" />
           <meta property="og:image" content="/assets/og.webp" key="og-image" />
+          <meta property="twitter:card" content="summary_large_image" />
+          <meta
+            property="twitter:image"
+            content="/assets/og.webp"
+            key="og-image"
+          />
         </Head>
         <Component {...pageProps} />
       </ThemeProvider>
