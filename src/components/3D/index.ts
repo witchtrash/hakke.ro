@@ -1,1 +1,1 @@
-export { Waves } from './Waves';
+export { Logo, LogoLoader, LogoEffects } from './Logo';
