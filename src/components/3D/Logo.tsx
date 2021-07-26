@@ -17,11 +17,40 @@ interface LogoProps {
 }
 export const Logo = (props: LogoProps) => {
   const texture = useTexture('assets/hakkero-dither.png');
-  const aspectRatio = 772 / 344;
+  const [scale, setScale] = React.useState(1);
+  const { width } = useWindowSize();
+
+  const imageWidth = 772;
+  const imageHeight = 344;
+  const aspectRatio = imageWidth / imageHeight;
+
+  const calculateScale = (width: number): number => {
+    /**
+     * This looks weird but it's just the function of a line passing through points
+     * (800, 3) and (300, 1)
+     *
+     * Why those points? 800 and 300 are (approximately) the smallest widths
+     * that the image can fit in, with scales 3 and 1 respectively
+     * x value are approximated so the function of the line looks a bit nicer to read
+     *
+     * Also the value is scaled down by a factor of 0.8 so it fits a bit better
+     */
+    const y = ((1 / 250) * width - 1 / 5) * 0.8;
+
+    // Return a value between 0.5 and 4
+    return Math.min(Math.max(y, 0.5), 4);
+  };
+
+  React.useEffect(() => {
+    setScale(calculateScale(width));
+  }, [width]);
 
   return (
     <mesh onPointerDown={props.onClick} onPointerUp={props.onRelease}>
-      <planeBufferGeometry attach="geometry" args={[3 * aspectRatio, 3]} />
+      <planeBufferGeometry
+        attach="geometry"
+        args={[scale * aspectRatio, scale]}
+      />
       <meshBasicMaterial attach="material" map={texture} side={DoubleSide} />
     </mesh>
   );

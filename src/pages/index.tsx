@@ -12,7 +12,7 @@ const Index = () => {
   const handleLogoRelease = () => setGlitchActive(false);
 
   return (
-    <Gradient fullHeight id="canvas-container">
+    <Gradient fullHeight id="canvas-container" onPointerUp={handleLogoRelease}>
       <Canvas resize={{ polyfill: ResizeObserver }}>
         <Center>
           <LogoLoader onClick={handleLogoClick} onRelease={handleLogoRelease} />
