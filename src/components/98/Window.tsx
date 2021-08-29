@@ -2,6 +2,7 @@ import React from 'react';
 
 type WindowProps = React.ComponentPropsWithoutRef<'div'> & {
   title: string;
+  id: string;
   body?: React.ReactNode;
   statusBar?: React.ReactNode;
   noPadding?: boolean;
@@ -11,6 +12,7 @@ type WindowProps = React.ComponentPropsWithoutRef<'div'> & {
 };
 export const Window = ({
   title,
+  id,
   statusBar,
   onMinimize,
   onMaximize,

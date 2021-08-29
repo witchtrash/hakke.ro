@@ -9,17 +9,16 @@ import {
 } from '@react-three/postprocessing';
 import { GlitchMode } from 'postprocessing';
 import { useFrame } from '@react-three/fiber';
-import { useMousePosition, useContainerSize } from '@hakkero/hooks';
+import { Coordinates, Dimensions } from '@hakkero/util/types';
 
-interface LogoProps {
-  containerRef: React.RefObject<HTMLDivElement>;
+type LogoProps = {
   onClick: () => void;
   onRelease: () => void;
-}
-export const Logo = (props: LogoProps) => {
+  dimensions: Dimensions;
+};
+export const Logo = ({ onClick, onRelease, dimensions }: LogoProps) => {
   const texture = useTexture('assets/hakkero-dither.png');
   const [scale, setScale] = React.useState(1);
-  const { width } = useContainerSize(props.containerRef);
 
   const imageWidth = 772;
   const imageHeight = 344;
@@ -34,20 +33,20 @@ export const Logo = (props: LogoProps) => {
      * that the image can fit in, with scales 3 and 1 respectively
      * x value are approximated so the function of the line looks a bit nicer to read
      *
-     * Also the value is scaled up by a factor of 1.25 so it fits a bit better
+     * Also the value is scaled up by a factor of 1.5 so it fits a bit better
      */
-    const y = ((1 / 250) * width - 1 / 5) * 1.25;
+    const y = ((1 / 250) * width - 1 / 5) * 1.5;
 
     // Return a value between 0.5 and 4
     return Math.min(Math.max(y, 0.5), 4);
   };
 
   React.useEffect(() => {
-    setScale(calculateScale(width));
-  }, [width]);
+    setScale(calculateScale(dimensions.width));
+  }, [dimensions]);
 
   return (
-    <mesh onPointerDown={props.onClick} onPointerUp={props.onRelease}>
+    <mesh onPointerDown={onClick} onPointerUp={onRelease}>
       <planeBufferGeometry
         attach="geometry"
         args={[scale * aspectRatio, scale]}
@@ -57,26 +56,16 @@ export const Logo = (props: LogoProps) => {
   );
 };
 
-export const LogoLoader = (props: LogoProps) => (
-  <Suspense fallback={null}>
-    <Logo {...props} />
-  </Suspense>
-);
-
-interface LogoEffectProps {
+type LogoEffectProps = {
   glitching: boolean;
-  containerRef: React.RefObject<HTMLDivElement>;
-}
+  dimensions: Dimensions;
+  mousePosition: Coordinates;
+};
 export const LogoEffects = (props: LogoEffectProps) => {
-  const { x: mouseX, y: mouseY } = useMousePosition(props.containerRef);
-  const { width: windowWidth, height: windowHeight } = useContainerSize(
-    props.containerRef
-  );
-
   const mapCursorPosition = () => {
     return {
-      x: (windowWidth / 2 - mouseX) / 10000,
-      y: (windowHeight / 2 - mouseY) / 10000,
+      x: (props.mousePosition.x - props.dimensions.width / 2) / 10000,
+      y: (props.dimensions.height / 2 - props.mousePosition.y) / 10000,
     };
   };
 
@@ -87,9 +76,9 @@ export const LogoEffects = (props: LogoEffectProps) => {
     if (ref.current) {
       const { x, y } = mapCursorPosition();
       chromaticAberrationOffset.x =
-        x + Math.sin(mouseX) / 1000 + Math.random() / 200;
+        x + Math.sin(props.mousePosition.x) / 1000 + Math.random() / 200;
       chromaticAberrationOffset.y =
-        y + Math.cos(mouseY) / 1000 + Math.random() / 200;
+        y + Math.cos(props.mousePosition.y) / 1000 + Math.random() / 200;
       ref.current.offset = chromaticAberrationOffset;
     }
   });
@@ -112,3 +101,21 @@ export const LogoEffects = (props: LogoEffectProps) => {
     </EffectComposer>
   );
 };
+
+export const LogoLoader = ({
+  dimensions,
+  glitching,
+  mousePosition,
+  ...rest
+}: LogoProps & LogoEffectProps) => (
+  <React.Fragment>
+    <Suspense fallback={null}>
+      <Logo dimensions={dimensions} {...rest} />
+    </Suspense>
+    <LogoEffects
+      glitching={glitching}
+      dimensions={dimensions}
+      mousePosition={mousePosition}
+    />
+  </React.Fragment>
+);
