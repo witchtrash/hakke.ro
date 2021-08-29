@@ -9,16 +9,17 @@ import {
 } from '@react-three/postprocessing';
 import { GlitchMode } from 'postprocessing';
 import { useFrame } from '@react-three/fiber';
-import { useMousePosition, useWindowSize } from '@hakkero/hooks';
+import { useMousePosition, useContainerSize } from '@hakkero/hooks';
 
 interface LogoProps {
+  containerRef: React.RefObject<HTMLDivElement>;
   onClick: () => void;
   onRelease: () => void;
 }
 export const Logo = (props: LogoProps) => {
   const texture = useTexture('assets/hakkero-dither.png');
   const [scale, setScale] = React.useState(1);
-  const { width } = useWindowSize();
+  const { width } = useContainerSize(props.containerRef);
 
   const imageWidth = 772;
   const imageHeight = 344;
@@ -33,9 +34,9 @@ export const Logo = (props: LogoProps) => {
      * that the image can fit in, with scales 3 and 1 respectively
      * x value are approximated so the function of the line looks a bit nicer to read
      *
-     * Also the value is scaled down by a factor of 0.8 so it fits a bit better
+     * Also the value is scaled up by a factor of 1.25 so it fits a bit better
      */
-    const y = ((1 / 250) * width - 1 / 5) * 0.8;
+    const y = ((1 / 250) * width - 1 / 5) * 1.25;
 
     // Return a value between 0.5 and 4
     return Math.min(Math.max(y, 0.5), 4);
@@ -64,10 +65,13 @@ export const LogoLoader = (props: LogoProps) => (
 
 interface LogoEffectProps {
   glitching: boolean;
+  containerRef: React.RefObject<HTMLDivElement>;
 }
 export const LogoEffects = (props: LogoEffectProps) => {
-  const { x: mouseX, y: mouseY } = useMousePosition();
-  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const { x: mouseX, y: mouseY } = useMousePosition(props.containerRef);
+  const { width: windowWidth, height: windowHeight } = useContainerSize(
+    props.containerRef
+  );
 
   const mapCursorPosition = () => {
     return {

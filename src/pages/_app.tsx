@@ -5,6 +5,8 @@ import { ThemeProvider } from '@emotion/react';
 import { dark, light, ThemeContext } from '@util/theme';
 import { Reset } from '@components/Reset';
 
+import '98.css';
+
 const App = ({ Component, pageProps }: AppProps) => {
   const [theme, setTheme] = React.useState(dark);
 

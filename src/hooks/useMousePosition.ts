@@ -1,26 +1,27 @@
 import React from 'react';
+import { Coordinates } from '@hakkero/util/types';
 
-interface MousePosition {
-  x: number;
-  y: number;
-}
-export const useMousePosition = () => {
-  const [mousePosition, setMousePosition] = React.useState<MousePosition>({
+export const useMousePosition = (
+  container: React.RefObject<HTMLDivElement>
+) => {
+  const [mousePosition, setMousePosition] = React.useState<Coordinates>({
     x: 0,
     y: 0,
   });
 
-  const onMouseMove = (event: MouseEvent) =>
+  const onMouseMove = (event: MouseEvent) => {
     setMousePosition({
       x: event.clientX,
       y: event.clientY,
     });
+  };
 
   React.useEffect(() => {
-    window.addEventListener('mousemove', onMouseMove);
+    const ref = container.current;
+    ref.addEventListener('mousemove', onMouseMove);
 
-    return () => window.removeEventListener('mousemove', onMouseMove);
-  });
+    return () => ref.removeEventListener('mousemove', onMouseMove);
+  }, [container]);
 
   return mousePosition;
 };

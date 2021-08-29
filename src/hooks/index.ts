@@ -1,2 +1,2 @@
 export { useMousePosition } from './useMousePosition';
-export { useWindowSize } from './useWindowSize';
+export { useContainerSize } from './useContainerSize';
