@@ -1,37 +1,36 @@
 import React from 'react';
 import { Window, WindowProps } from './Window';
-import { Coordinates, Dimensions } from '@hakkero/util/types';
+import { Coordinates } from '@hakkero/util/types';
+import { DndContext } from '@dnd-kit/core';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { useMediaQuery } from 'react-responsive';
+import Image from 'next/image';
 import styled from '@emotion/styled';
 
 import html0 from 'public/assets/win98/html-0.png';
 import computer1 from 'public/assets/win98/computer_explorer-1.png';
 
-import Image from 'next/image';
-
-type InternetExplorerProps = WindowProps & {
-  dimensions: Dimensions;
+type InternetExplorerProps = Omit<WindowProps, 'translateCoordinates'> & {
   coordinates: Coordinates;
 };
 
-const StyledWindow = styled(Window)<InternetExplorerProps>`
+const StyledWindow = styled(Window)`
   position: absolute;
-  top: ${props => props.coordinates.y}px;
-  left: ${props => props.coordinates.x}px;
   width: unset;
+  overflow: hidden;
 
   .window {
-    min-width: 600px;
-    min-height: 400px;
-    width: 800px;
-    height: 600px;
-    resize: both;
-    overflow: auto;
+    height: 100%;
   }
   .window-body {
     // 100% - padding - title bar padding - title bar height
     height: calc(100% - 4px - 6px - 14px - 20px);
     box-shadow: inset -1px -1px #dfdfdf, inset 1px 1px grey;
     margin: 2px 1px 2px 1px;
+  }
+
+  .title-bar-text {
+    user-select: none;
   }
 
   .filler {
@@ -76,16 +75,72 @@ const StatusBarFields = () => (
   </React.Fragment>
 );
 
+interface TranslateState {
+  translate: Coordinates;
+  initialTranslate: Coordinates;
+}
+
 export const InternetExplorer = (props: InternetExplorerProps) => {
+  const isSmall = useMediaQuery({
+    query: '(max-width: 600px)',
+  });
+
+  const defaultCoordinates: Coordinates = {
+    x: props.coordinates.x,
+    y: props.coordinates.y,
+  };
+
+  const [translate, setTranslate] = React.useState<TranslateState>({
+    translate: defaultCoordinates,
+    initialTranslate: defaultCoordinates,
+  });
+
+  React.useEffect(() => {
+    if (isSmall) {
+      setTranslate({
+        translate: {
+          x: 0,
+          y: 0,
+        },
+        initialTranslate: {
+          x: 0,
+          y: 0,
+        },
+      });
+    }
+  }, [isSmall]);
+
   return (
-    <StyledWindow
-      title={`${props.title} - Microsoft Internet Explorer`}
-      id="home-window"
-      dimensions={props.dimensions}
-      coordinates={props.coordinates}
-      statusBar={<StatusBarFields />}
+    <DndContext
+      modifiers={[restrictToWindowEdges]}
+      onDragMove={({ delta }) => {
+        setTranslate(({ initialTranslate }) => {
+          return {
+            initialTranslate,
+            translate: {
+              x: initialTranslate.x + delta.x,
+              y: initialTranslate.y + delta.y,
+            },
+          };
+        });
+      }}
+      onDragEnd={() => {
+        setTranslate(({ translate }) => {
+          return {
+            translate,
+            initialTranslate: translate,
+          };
+        });
+      }}
     >
-      {props.children}
-    </StyledWindow>
+      <StyledWindow
+        title={`${props.title} - Microsoft Internet Explorer`}
+        id="home-window"
+        translateCoordinates={translate.translate}
+        statusBar={<StatusBarFields />}
+      >
+        {props.children}
+      </StyledWindow>
+    </DndContext>
   );
 };

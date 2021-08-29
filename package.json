@@ -14,6 +14,7 @@
   "dependencies": {
     "98.css": "^0.1.17",
     "@dnd-kit/core": "^3.1.1",
+    "@dnd-kit/modifiers": "^3.0.0",
     "@emotion/react": "^11.1.5",
     "@emotion/styled": "^11.3.0",
     "@juggle/resize-observer": "^3.3.1",
@@ -22,8 +23,10 @@
     "@react-three/postprocessing": "^2.0.4-alpha.2",
     "emotion-normalize": "^11.0.1",
     "next": "^11.0.1",
+    "re-resizable": "^6.9.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-responsive": "^9.0.0-beta.3",
     "three": "^0.130.1",
     "use-resize-observer": "^8.0.0"
   },
