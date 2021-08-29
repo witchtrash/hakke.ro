@@ -3,6 +3,7 @@ import { useDraggable } from '@dnd-kit/core';
 import { Coordinates } from '@hakkero/util/types';
 import { Resizable } from 're-resizable';
 import { useWindowSize } from '@hakkero/hooks';
+import { useMediaQuery } from 'react-responsive';
 
 export type WindowProps = React.ComponentPropsWithoutRef<'div'> & {
   title: string;
@@ -30,10 +31,9 @@ export const Window = ({
   const { attributes, listeners, setNodeRef } = useDraggable({
     id,
   });
-  const style = {
-    transform: `translate3d(${translateCoordinates.x}px, ${translateCoordinates.y}px, 0)`,
-  };
   const windowSize = useWindowSize();
+  const isSmall = useMediaQuery({ query: '(max-width: 600px)' });
+  const isLarge = useMediaQuery({ query: '(min-width: 1920px)' });
 
   const getMaxWidth = React.useCallback(() => {
     return windowSize.width - translateCoordinates.x;
@@ -43,12 +43,34 @@ export const Window = ({
     return windowSize.height - translateCoordinates.y;
   }, [windowSize.height, translateCoordinates.y]);
 
+  const [width, setWidth] = React.useState(800);
+  const [height, setHeight] = React.useState(600);
+
+  React.useEffect(() => {
+    if (isSmall) {
+      setWidth(windowSize.width);
+      setHeight(windowSize.height);
+    }
+    if (isLarge) {
+      setWidth(1600);
+      setHeight(900);
+    }
+  }, [isSmall, isLarge, windowSize]);
+
+  const style = {
+    transform: `translate3d(${translateCoordinates.x}px, ${translateCoordinates.y}px, 0)`,
+  };
+
   return (
     <div {...rest} ref={setNodeRef} {...attributes} style={style}>
       <Resizable
-        defaultSize={{
-          width: 800,
-          height: 600,
+        size={{
+          width,
+          height,
+        }}
+        onResizeStop={(e, direction, ref, d) => {
+          setHeight(height + d.height);
+          setWidth(width + d.width);
         }}
         minHeight={300}
         minWidth={300}
