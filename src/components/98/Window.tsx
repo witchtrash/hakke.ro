@@ -1,6 +1,6 @@
 import React from 'react';
 
-type WindowProps = React.ComponentPropsWithoutRef<'div'> & {
+export type WindowProps = React.ComponentPropsWithoutRef<'div'> & {
   title: string;
   id: string;
   body?: React.ReactNode;

@@ -13,9 +13,11 @@ export const useMousePosition = <T extends HTMLElement>(
     const ref = container.current;
 
     const onMouseMove = (event: MouseEvent) => {
+      const rect = ref.getBoundingClientRect();
+
       setMousePosition({
-        x: event.clientX,
-        y: event.clientY,
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top,
       });
     };
 
