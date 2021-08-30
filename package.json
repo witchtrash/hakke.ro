@@ -21,6 +21,7 @@
     "@react-three/drei": "^7.0.6",
     "@react-three/fiber": "^7.0.4",
     "@react-three/postprocessing": "^2.0.4-alpha.2",
+    "clippyjs": "^0.0.3",
     "emotion-normalize": "^11.0.1",
     "next": "^11.0.1",
     "re-resizable": "^6.9.0",
