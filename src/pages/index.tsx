@@ -6,7 +6,7 @@ import { Gradient } from '@components/Gradient';
 import { ResizeObserver } from '@juggle/resize-observer';
 import { Desktop, InternetExplorer } from '@hakkero/components/98';
 import styled from '@emotion/styled';
-import { useMousePosition } from '@hakkero/hooks';
+import { useMousePosition, useClippy } from '@hakkero/hooks';
 import useResizeObserver from 'use-resize-observer';
 import { Coordinates, Dimensions } from '@hakkero/util/types';
 
@@ -29,6 +29,8 @@ const Index = () => {
 
   const handleLogoClick = () => setGlitchActive(true);
   const handleLogoRelease = () => setGlitchActive(false);
+
+  useClippy();
 
   const dimensions = {
     height,
