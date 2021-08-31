@@ -50,6 +50,10 @@ export const useClippy = () => {
     clippyjs.load(
       'Clippy',
       agent => {
+        if (window.innerWidth < 600) {
+          agent.moveTo(window.innerWidth * 0.45, window.innerHeight * 0.8);
+        }
+
         agent.show();
         agent.speak(shittyTips[Math.floor(Math.random() * shittyTips.length)]);
 
@@ -64,16 +68,12 @@ export const useClippy = () => {
     if (!clippy) {
       return;
     }
+
     const randomTip = () =>
       shittyTips[Math.floor(Math.random() * shittyTips.length)];
-    const randomWidth = () =>
-      Math.floor(Math.random() * windowSize.width - 100);
-    const randomHeight = () =>
-      Math.floor(Math.random() * windowSize.height - 50);
 
     const handle = setInterval(() => {
       clippy.animate();
-      clippy.moveTo(randomWidth(), randomHeight());
       clippy.speak(randomTip());
     }, 5000);
 
