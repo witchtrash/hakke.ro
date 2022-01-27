@@ -1,1 +1,0 @@
-clippy.soundsReady('Clippy', {});
