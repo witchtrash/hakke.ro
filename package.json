@@ -3,7 +3,7 @@
   "private": true,
   "description": "hakke.ro webzone",
   "version": "0.1.0",
-  "license": "0BSD",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -12,31 +12,15 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "98.css": "^0.1.17",
-    "@dnd-kit/core": "^3.1.1",
-    "@dnd-kit/modifiers": "^3.0.0",
-    "@emotion/react": "^11.1.5",
-    "@emotion/styled": "^11.3.0",
-    "@juggle/resize-observer": "^3.3.1",
-    "@react-three/drei": "^7.0.6",
-    "@react-three/fiber": "^7.0.4",
-    "@react-three/postprocessing": "^2.0.4-alpha.2",
-    "clippyjs": "^0.0.3",
-    "emotion-normalize": "^11.0.1",
     "next": "^11.0.1",
-    "re-resizable": "^6.9.0",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-responsive": "^9.0.0-beta.3",
-    "three": "^0.130.1",
-    "use-resize-observer": "^8.0.0"
+    "react-dom": "^17.0.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^11.0.1",
     "@types/node": "^16.3.1",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
-    "@types/three": "^0.130.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
     "eslint": "^7.24.0",
