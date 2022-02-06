@@ -1,11 +1,16 @@
 import React from 'react';
-import { Box, Heading } from '@chakra-ui/react';
+import { Main } from 'components/Main';
+import { Heading } from '@chakra-ui/react';
+import { HeroDecoration } from 'components/HeroDecoration';
 
 const Index = () => {
   return (
-    <Box>
-      <Heading color="violet.400">hello</Heading>
-    </Box>
+    <React.Fragment>
+      <HeroDecoration />
+      <Main overflowX="hidden">
+        <Heading color="violet.400">hello</Heading>
+      </Main>
+    </React.Fragment>
   );
 };
 
