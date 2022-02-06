@@ -1,5 +1,7 @@
 import React from 'react';
 import Head from 'next/head';
+import { ChakraProvider } from '@chakra-ui/react';
+import { theme } from 'styles/theme';
 import type { AppProps } from 'next/app';
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -9,6 +11,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         <title key="title">1-800-hakkero</title>
         <meta property="og:title" content="hakke.ro" key="og-title" />
         <meta name="author" content="mari" key="author" />
+
         <link rel="icon" href="/icon.png" />
 
         <meta
@@ -32,7 +35,9 @@ const App = ({ Component, pageProps }: AppProps) => {
           key="og-image"
         />
       </Head>
-      <Component {...pageProps} />
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+      </ChakraProvider>
     </React.Fragment>
   );
 };
