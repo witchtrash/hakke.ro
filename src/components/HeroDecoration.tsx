@@ -66,9 +66,9 @@ export const HeroDecoration = () => {
       },
     },
     hidden: {
-      top: '10%',
+      top: '20%',
       opacity: 0,
-      rotate: 5,
+      rotate: 2,
     },
   };
 
