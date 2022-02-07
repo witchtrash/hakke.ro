@@ -14,20 +14,21 @@ export const HeroText = (props: HeroTextProps) => {
         '.hero-text': {
           WebkitTextStrokeColor: color,
           WebkitTextStrokeWidth: props.filled ? '0' : '1px',
-          color: props.filled ? color : 'white',
+          color: props.filled ? color : 'transparent',
         },
       }}
+      zIndex={props.zIndex}
     >
       <Heading
         className="hero-text"
         whiteSpace="nowrap"
         textTransform="uppercase"
-        fontSize={['16vw', '12vw', '10vw', '8vw']}
+        fontSize={['4rem', '4rem', '5rem', '6rem', '8rem']}
         lineHeight={['base', 'base', 'short', 'none']}
         userSelect="none"
-        p="0"
+        p="0.125rem 2rem"
         m="0"
-        zIndex={props.zIndex}
+        background={props.filled ? 'violet.500' : 'transparent'}
       >
         {props.children}
       </Heading>
