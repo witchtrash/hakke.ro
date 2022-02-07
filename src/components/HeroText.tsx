@@ -29,6 +29,11 @@ export const HeroText = (props: HeroTextProps) => {
         p="0.125rem 2rem"
         m="0"
         background={props.filled ? 'violet.500' : 'transparent'}
+        sx={{
+          _hover: {
+            transform: 'translateZ(12px)',
+          },
+        }}
       >
         {props.children}
       </Heading>

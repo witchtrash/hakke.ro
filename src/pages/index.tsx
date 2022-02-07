@@ -1,7 +1,8 @@
 import React from 'react';
 import { Container } from 'components/Container';
-import { Box, VStack, Button } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { HeroDecoration } from 'components/HeroDecoration';
+import { NavigationColumn } from 'components/NavigationColumn';
 
 const Index = () => {
   return (
@@ -9,10 +10,7 @@ const Index = () => {
       <HeroDecoration />
       <Container display="flex">
         <Box flex="1 1 auto" />
-        <VStack alignItems="flex-end">
-          <Button mb="2rem">x</Button>
-          <Box background="pink.200" w="1rem" h="100%"></Box>
-        </VStack>
+        <NavigationColumn />
       </Container>
     </Box>
   );

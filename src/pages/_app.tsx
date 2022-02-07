@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from 'styles/theme';
 import type { AppProps } from 'next/app';
+import 'focus-visible/dist/focus-visible';
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
