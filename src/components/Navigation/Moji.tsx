@@ -27,11 +27,11 @@ export const Moji = () => (
   <HStack>
     <BigMoji>魔女</BigMoji>
     <VStack spacing="-0.25rem">
-      <SmallMoji>絶</SmallMoji>
-      <SmallMoji>望</SmallMoji>
-      <SmallMoji>的</SmallMoji>
-      <SmallMoji>な</SmallMoji>
-      <SmallMoji>夢</SmallMoji>
+      <SmallMoji>魔</SmallMoji>
+      <SmallMoji>法</SmallMoji>
+      <SmallMoji>少</SmallMoji>
+      <SmallMoji>女</SmallMoji>
+      <SmallMoji>ぜ</SmallMoji>
     </VStack>
   </HStack>
 );

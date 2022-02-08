@@ -1,10 +1,10 @@
 import React from 'react';
 import { Flex, Portal, Slide, Spacer, VStack } from '@chakra-ui/react';
-import { Container } from './Container';
-import { IconButton } from './IconButton';
+import { Container } from 'components/Layout';
+import { IconButton } from 'components/IconButton';
+import { MotionBox } from 'components/MotionBox';
 import { RiCloseFill } from 'react-icons/ri';
 import { NavigationLink } from './NavigationLink';
-import { MotionBox } from './MotionBox';
 import { Moji } from './Moji';
 
 interface NavigationProps {
@@ -34,12 +34,12 @@ export const Navigation = (props: NavigationProps) => {
             alignItems="center"
             justifyContent="center"
           >
-            <VStack spacing="2rem">
+            <VStack spacing="1.25rem">
               <MotionBox>
-                <NavigationLink href="#">about</NavigationLink>
+                <NavigationLink href="/about">about</NavigationLink>
               </MotionBox>
               <MotionBox>
-                <NavigationLink href="#">words</NavigationLink>
+                <NavigationLink href="/blog">words</NavigationLink>
               </MotionBox>
               <MotionBox>
                 <NavigationLink href="https://github.com">code</NavigationLink>
