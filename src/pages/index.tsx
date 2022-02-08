@@ -1,16 +1,16 @@
 import React from 'react';
-import { Container } from 'components/Container';
+import { Container } from 'components/Layout';
 import { Box, Spacer } from '@chakra-ui/react';
-import { HeroDecoration } from 'components/HeroDecoration';
-import { NavigationColumn } from 'components/NavigationColumn';
+import { Decoration } from 'components/Decoration';
+import { NavigationMenu } from 'components/Navigation';
 
 const Index = () => {
   return (
     <Box as="main">
-      <HeroDecoration />
+      <Decoration />
       <Container display="flex">
         <Spacer />
-        <NavigationColumn />
+        <NavigationMenu />
       </Container>
     </Box>
   );

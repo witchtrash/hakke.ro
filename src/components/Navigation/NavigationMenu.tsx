@@ -1,11 +1,11 @@
 import React from 'react';
 import { VStack, useDisclosure } from '@chakra-ui/react';
 import { RiMenu3Fill } from 'react-icons/ri';
-import { IconButton } from './IconButton';
-import { MotionBox } from './MotionBox';
+import { IconButton } from 'components/IconButton';
+import { MotionBox } from 'components/MotionBox';
 import { Navigation } from './Navigation';
 
-export const NavigationColumn = () => {
+export const NavigationMenu = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
