@@ -1,18 +1,14 @@
 import React from 'react';
-import { Container } from 'components/Layout';
-import { Box, Spacer } from '@chakra-ui/react';
+import { PageLayout } from 'components/Layout';
 import { Decoration } from 'components/Decoration';
-import { NavigationMenu } from 'components/Navigation';
+import { VerticalLine } from 'components/Decoration/VerticalLine';
 
 const Index = () => {
   return (
-    <Box as="main">
+    <PageLayout>
       <Decoration />
-      <Container display="flex">
-        <Spacer />
-        <NavigationMenu />
-      </Container>
-    </Box>
+      <VerticalLine />
+    </PageLayout>
   );
 };
 
