@@ -14,7 +14,7 @@ interface NavigationProps {
 export const Navigation = (props: NavigationProps) => {
   return (
     <Portal>
-      <Slide direction="top" in={props.isOpen}>
+      <Slide direction="top" in={props.isOpen} unmountOnExit>
         <Container background="violet.600" display="flex" flexDir="column">
           <Flex flexDir="row" alignItems="flex-end">
             <Spacer />
@@ -36,10 +36,10 @@ export const Navigation = (props: NavigationProps) => {
           >
             <VStack spacing="1.25rem">
               <MotionBox>
-                <NavigationLink href="/about">about</NavigationLink>
+                <NavigationLink href="/">home</NavigationLink>
               </MotionBox>
               <MotionBox>
-                <NavigationLink href="/blog">words</NavigationLink>
+                <NavigationLink href="/about">about</NavigationLink>
               </MotionBox>
               <MotionBox>
                 <NavigationLink href="https://github.com">code</NavigationLink>
