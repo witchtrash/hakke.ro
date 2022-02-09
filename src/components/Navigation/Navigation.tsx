@@ -42,7 +42,9 @@ export const Navigation = (props: NavigationProps) => {
                 <NavigationLink href="/about">about</NavigationLink>
               </MotionBox>
               <MotionBox>
-                <NavigationLink href="https://github.com">code</NavigationLink>
+                <NavigationLink href="https://github.com/witchtrash">
+                  code
+                </NavigationLink>
               </MotionBox>
             </VStack>
           </Flex>
