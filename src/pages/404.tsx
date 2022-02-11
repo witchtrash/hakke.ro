@@ -1,35 +1,35 @@
 import React from 'react';
 import { Container } from 'components/Layout';
-import { Box, Center, Heading, Link as ChakraLink } from '@chakra-ui/react';
+import { Box, Flex, Heading, Link as ChakraLink } from '@chakra-ui/react';
 import { IconButton } from 'components/IconButton';
 import { RiArrowLeftSLine } from 'react-icons/ri';
 import Link from 'next/link';
 
 const NotFound = () => (
   <Container
+    display="flex"
     backgroundImage="/assets/404.jpg"
     backgroundRepeat="no-repeat"
     backgroundPosition="right bottom"
-    backgroundSize={['contain']}
+    backgroundSize="contain"
   >
-    <Center h="full" position="relative">
+    <Box>
       <Link href="/" passHref>
         <ChakraLink>
           <IconButton
-            position="absolute"
-            top="0"
-            left="0"
             aria-label="Navigate to home"
             icon={<RiArrowLeftSLine />}
           />
         </ChakraLink>
       </Link>
+    </Box>
+    <Flex flex="1 1 auto" alignItems="center" justifyContent="center">
       <Box p="1rem 2rem" background="violet.500">
         <Heading fontSize={['1rem', '2rem', '3rem']} color="white">
           There is nothing to be found here.
         </Heading>
       </Box>
-    </Center>
+    </Flex>
   </Container>
 );
 

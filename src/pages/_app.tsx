@@ -33,11 +33,15 @@ const App = ({ Component, pageProps }: AppProps) => {
         <meta property="og:site_name" content="hakke.ro" />
         <meta property="og:type" content="website" key="og-type" />
         <meta property="og:url" content="https://hakke.ro" />
-        <meta property="og:image" content="/assets/og.jpg" key="og-image" />
+        <meta
+          property="og:image"
+          content="https://hakke.ro/assets/og.jpg"
+          key="og-image"
+        />
         <meta property="twitter:card" content="summary_large_image" />
         <meta
           property="twitter:image"
-          content="/assets/og.webp"
+          content="https://hakke.ro/assets/og.jpg"
           key="og-image"
         />
       </Head>

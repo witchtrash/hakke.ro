@@ -47,76 +47,91 @@ const BouncyLetter = (props: BouncyLetterProps) => (
 const About = () => {
   return (
     <PageLayout>
-      <Box p={['2rem', '2rem', '4rem']}>
-        <WindupChildren>
-          <Box>
-            <Pace ms={50}>
-              <Heading>hi friend</Heading>
-            </Pace>
+      <WindupChildren>
+        <Box fontFamily="heading" p={['2rem', '2rem', '4rem']}>
+          <Pace ms={50}>
+            <Heading>{`hi friend`}</Heading>
             <Pause ms={700} />
-            <Pace ms={50}>
-              <Heading>
-                i&apos;m{' '}
-                <Box display="inline-block" color="violet.500">
-                  <CharWrapper element={BouncyLetter}>mari</CharWrapper>
-                </Box>
-              </Heading>
-            </Pace>
-            <Pause ms={1000} />
-            <Box mt={8}>
-              <Pace ms={40}>
-                <Text fontFamily="heading">
-                  i like writing code sometimes.
-                  <Pause ms={400} /> i get paid to do that.
-                </Text>
-                <Pause ms={400} />
-                <Text fontFamily="heading">here are some things about me.</Text>
-              </Pace>
-            </Box>
-            <UnorderedList mt={4} fontFamily="mono">
-              <ListItem>
-                education: <Pause ms={500} />
-                some
-              </ListItem>
-              <ListItem>
-                work: <Pause ms={500} />
-                yes
-              </ListItem>
-              <ListItem>
-                skills: <Pause ms={500} />a few
-              </ListItem>
-              <ListItem>
-                interests: <Pause ms={500} />
-                many
-              </ListItem>
-            </UnorderedList>
-            <Pace ms={40}>
-              <Text fontFamily="heading" mt={4}>
-                <Pace ms={40}>
-                  you can look at my terrible code on{' '}
-                  <Link color="violet.500" href="https://github.com/witchtrash">
-                    github.
-                  </Link>
-                </Pace>
-              </Text>
-              <Text fontFamily="heading">
-                <Pace ms={40}>there are a few things on there.</Pace>
-              </Text>
-              <Pause ms={600} />
-              <Text fontFamily="heading" mt={4}>
-                that&apos;s it.
-              </Text>
-              <Pause ms={600} />
-              <Text fontFamily="heading">enjoy your stay.</Text>
-              <Pause ms={600} />
-              <Text fontFamily="heading">be safe.</Text>
+            <Heading>
+              {`i'm `}
+              <Box display="inline-block" color="violet.500">
+                <CharWrapper element={BouncyLetter}>{`mari`}</CharWrapper>
+              </Box>
+            </Heading>
+          </Pace>
 
+          <Pause ms={1000} />
+          <Box my="8" />
+
+          <Pace ms={40}>
+            <Text fontFamily="heading">
+              {`i like writing code sometimes. `}
               <Pause ms={400} />
+              {`i get paid to do that.`}
+            </Text>
+            <Pause ms={400} />
+            <Text fontFamily="heading">{`here are some things about me.`}</Text>
+          </Pace>
+
+          <UnorderedList mt={6} fontFamily="mono">
+            <ListItem>
+              {`education: `}
+              <Pause ms={500} />
+              {`some`}
+            </ListItem>
+            <ListItem>
+              {`work: `}
+              <Pause ms={500} />
+              {`yes`}
+            </ListItem>
+            <ListItem>
+              {`skills: `}
+              <Pause ms={500} />
+              {`a few`}
+            </ListItem>
+            <ListItem>
+              {`interests: `}
+              <Pause ms={500} />
+              {`many`}
+            </ListItem>
+          </UnorderedList>
+
+          <Box my="6" />
+
+          <Pace ms={40}>
+            <Text>
+              {`you can look at my terrible code on `}
+              <Link color="violet.500" href="https://github.com/witchtrash">
+                {`github.`}
+              </Link>
+            </Text>
+
+            <Pause ms={300} />
+            <Text>{`there are a few things on there.`}</Text>
+            <Pause ms={600} />
+            <Box my="6" />
+
+            <Text>{`that's it`}</Text>
+            <Pause ms={600} />
+
+            <Text>{`enjoy your stay.`}</Text>
+            <Pause ms={600} />
+
+            <Text>{`be safe.`}</Text>
+            <Pause ms={400} />
+            <Box my="6" />
+
+            <MotionBox
+              opacity="0"
+              animate={{
+                opacity: 1,
+              }}
+            >
               <Icon mt={4} color="violet.500" w={8} h={8} as={RiHeartFill} />
-            </Pace>
-          </Box>
-        </WindupChildren>
-      </Box>
+            </MotionBox>
+          </Pace>
+        </Box>
+      </WindupChildren>
     </PageLayout>
   );
 };
