@@ -2,7 +2,7 @@ name: Fetch scrobble count
 
 on:
   schedule:
-    - cron: '5 * * * *'
+    - cron: '*/5 * * * *'
 
 jobs:
   ping:
