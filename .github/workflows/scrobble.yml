@@ -3,13 +3,21 @@ name: Fetch scrobble count
 on:
   schedule:
     - cron: '*/5 * * * *'
+    - cron: '30 8 * * *'
 
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-    - name: Ping Next.js endpoint
+    - name: Ping scrobble endpoint
+      if: github.event.schedule == '*/5 * * * *'
       run: |
         curl --request GET \
           --url https://hakke.ro/api/last.fm/scrobble \
+          --header 'Authorization: ${{ secrets.SCRAPE_AUTHORIZATION }}'
+    - name: Ping artists endpoint
+      if: github.event.schedule == '30 * * * *'
+      run: |
+        curl --request GET \
+          --url https://hakke.ro/api/last.fm/artist \
           --header 'Authorization: ${{ secrets.SCRAPE_AUTHORIZATION }}'
