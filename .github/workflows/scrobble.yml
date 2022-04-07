@@ -1,4 +1,4 @@
-name: Fetch scrobble count
+name: Fetch Last.fm stats
 
 on:
   schedule:
