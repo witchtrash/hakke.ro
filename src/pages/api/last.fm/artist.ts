@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { fetch } from 'util/last-fm';
 import { clientFactory } from 'util/supabase';
 import { runMiddleware } from 'util/middleware';
-import { WeeklyArtistChart } from 'models/last-fm';
+import { WeeklyArtistChartDto } from 'models/last-fm';
 import CORS from 'cors';
 
 const cors = CORS({
@@ -13,8 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await runMiddleware(req, res, cors);
 
   const client = clientFactory({ useServiceKey: true });
-
-  const data = await fetch<WeeklyArtistChart>({
+  const data = await fetch<WeeklyArtistChartDto>({
     method: 'user.getweeklyartistchart',
   });
 

@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { fetch } from 'util/last-fm';
 import { clientFactory } from 'util/supabase';
 import { runMiddleware } from 'util/middleware';
-import { UserInfo } from 'models/last-fm';
+import { UserInfoDto } from 'models/last-fm';
 import CORS from 'cors';
 
 const cors = CORS({
@@ -13,8 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   await runMiddleware(req, res, cors);
 
   const client = clientFactory({ useServiceKey: true });
-
-  const data = await fetch<UserInfo>({ method: 'user.getInfo' });
+  const data = await fetch<UserInfoDto>({ method: 'user.getInfo' });
 
   const response = await client.from('scrobbles').insert([
     {

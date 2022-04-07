@@ -1,4 +1,4 @@
-interface Artist {
+interface ArtistDto {
   mbid: string;
   url: string;
   name: string;
@@ -8,9 +8,9 @@ interface Artist {
   playcount: number;
 }
 
-export interface WeeklyArtistChart {
+export interface WeeklyArtistChartDto {
   weeklyartistchart: {
-    artist: Artist[];
+    artist: ArtistDto[];
     '@attr': {
       from: number;
       to: number;
@@ -19,7 +19,7 @@ export interface WeeklyArtistChart {
   };
 }
 
-export interface UserInfo {
+export interface UserInfoDto {
   user: {
     country: string;
     age: number;
