@@ -16,7 +16,7 @@ jobs:
           --url https://hakke.ro/api/last.fm/scrobble \
           --header 'Authorization: ${{ secrets.SCRAPE_AUTHORIZATION }}'
     - name: Ping artists endpoint
-      if: github.event.schedule == '30 * * * *'
+      if: github.event.schedule == '30 8 * * *'
       run: |
         curl --request GET \
           --url https://hakke.ro/api/last.fm/artist \
