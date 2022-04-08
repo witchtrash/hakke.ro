@@ -1,11 +1,12 @@
 import React from 'react';
-import { Flex, Portal, Slide, Spacer, VStack } from '@chakra-ui/react';
+import { Flex, Portal, Slide, Spacer } from '@chakra-ui/react';
 import { Container } from 'components/Layout';
 import { IconButton } from 'components/IconButton';
 import { MotionBox } from 'components/MotionBox';
 import { RiCloseFill } from 'react-icons/ri';
 import { NavigationLink } from './NavigationLink';
 import { Moji } from './Moji';
+import { animations } from './animations';
 
 interface NavigationProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ interface NavigationProps {
 export const Navigation = (props: NavigationProps) => {
   return (
     <Portal>
-      <Slide direction="top" in={props.isOpen} unmountOnExit>
+      <Slide direction="top" in={props.isOpen}>
         <Container background="violet.600" display="flex" flexDir="column">
           <Flex flexDir="row" alignItems="flex-end">
             <Spacer />
@@ -34,25 +35,23 @@ export const Navigation = (props: NavigationProps) => {
             alignItems="center"
             justifyContent="center"
           >
-            <VStack spacing="1.25rem">
-              <MotionBox>
-                <NavigationLink href="/">home</NavigationLink>
-              </MotionBox>
-              <MotionBox>
-                <NavigationLink href="/about">about</NavigationLink>
-              </MotionBox>
-              <MotionBox>
-                <NavigationLink href="https://github.com/witchtrash">
-                  code
-                </NavigationLink>
-              </MotionBox>
-            </VStack>
+            <MotionBox
+              animate={props.isOpen ? 'open' : 'closed'}
+              variants={animations.list}
+            >
+              <NavigationLink href="/">home</NavigationLink>
+              <NavigationLink href="/about">about</NavigationLink>
+              <NavigationLink href="https://github.com/witchtrash">
+                code
+              </NavigationLink>
+            </MotionBox>
           </Flex>
+
           <Flex
             justifyContent="flex-end"
             borderBottom="0.25rem solid aquamarine"
           >
-            <MotionBox>
+            <MotionBox animate={props.isOpen ? 'open' : 'closed'}>
               <Moji />
             </MotionBox>
           </Flex>
