@@ -56,7 +56,7 @@ const fetchArtistChart = async () => {
   await STATS.put(
     Store.WEEKLY_ARTISTS,
     JSON.stringify(
-      weeklyArtists.weeklyartistchart.artist.slice(0, 4).map(artist => {
+      weeklyArtists.weeklyartistchart.artist.slice(0, 5).map(artist => {
         return {
           artistName: artist.name,
           url: artist.url,
