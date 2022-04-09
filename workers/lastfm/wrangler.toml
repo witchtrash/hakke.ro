@@ -1,12 +1,25 @@
+account_id = "cd5233fab6d06ca65cccd2ce987a79c4"
+compatibility_date = "2022-04-08"
 name = "lastfm"
 type = "javascript"
-zone_id = ""
-account_id = ""
-route = ""
 workers_dev = true
-compatibility_date = "2022-04-08"
+
+# [secret]
+# LASTFM_TOKEN
+# LASTFM_USER
 
 [build]
 command = "yarn && yarn build"
+
 [build.upload]
 format = "service-worker"
+
+[triggers]
+crons = [
+  "*/5 * * * *",
+  "20 4 * * *",
+]
+
+kv_namespaces = [
+  {binding = "STATS", id = "b34d159388ee4cec85b433a10cbd29fd"},
+]

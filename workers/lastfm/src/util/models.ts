@@ -24,7 +24,7 @@ export interface UserInfoDto {
     country: string;
     age: number;
     playcount: number;
-    subscribers: NamedCurve;
+    subscribers: number;
     realname: string;
     playlists: number;
     bootstrap: number;
