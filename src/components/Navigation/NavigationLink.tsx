@@ -15,7 +15,7 @@ export const NavigationLink = (props: NavigationLinkProps) => {
   return (
     <MotionBox
       variants={animations.item}
-      my="3"
+      my="6"
       whileHover={{
         scale: 1.1,
       }}

@@ -19,11 +19,13 @@
     "@mdx-js/react": "^2.1.1",
     "focus-visible": "^5.2.0",
     "framer-motion": "^5",
+    "gray-matter": "^4.0.3",
     "ky": "^0.30.0",
     "next": "^12.0.9",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.3.1",
+    "remark-frontmatter": "^4.0.1",
     "swr": "^1.2.2",
     "windups": "^1.1.9"
   },

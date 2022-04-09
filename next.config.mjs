@@ -1,3 +1,5 @@
+import remarkFrontmatter from 'remark-frontmatter';
+
 /** @type {import('next').NextConfig}*/
 export default {
   webpack: (config, options) => {
@@ -7,8 +9,10 @@ export default {
         options.defaultLoaders.babel,
         {
           loader: '@mdx-js/loader',
+          /** @type {import('@mdx-js/loader').Options} */
           options: {
             providerImportSource: '@mdx-js/react',
+            remarkPlugins: [remarkFrontmatter],
           },
         },
       ],

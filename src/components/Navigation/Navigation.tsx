@@ -41,6 +41,7 @@ export const Navigation = (props: NavigationProps) => {
             >
               <NavigationLink href="/">home</NavigationLink>
               <NavigationLink href="/about">about</NavigationLink>
+              <NavigationLink href="/blog">words</NavigationLink>
               <NavigationLink href="https://github.com/witchtrash">
                 code
               </NavigationLink>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageLayout } from 'components/Layout';
-import { Text, Box, Flex, Heading } from '@chakra-ui/react';
+import { Flex, Heading } from '@chakra-ui/react';
 import { MotionBox } from 'components/MotionBox';
 
 const NotFound = () => (
@@ -19,7 +19,7 @@ const NotFound = () => (
         p="1rem 2rem"
         fontSize={['2rem', '2rem', '2rem']}
         color="white"
-        background="violet.300"
+        background="violet.400"
         animate={{
           opacity: [0, 1],
           y: [40, 0],

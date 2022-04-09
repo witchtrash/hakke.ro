@@ -11,7 +11,7 @@ export const IconButton = (props: IconButtonProps) => (
     fontSize="42px"
     variant="unstyled"
     _hover={{
-      color: 'violet.500',
+      color: 'violet.400',
     }}
     {...props}
   />

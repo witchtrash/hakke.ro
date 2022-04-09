@@ -20,7 +20,7 @@ export const BackButton = () => {
       onMouseLeave={() => handleMouseHover(false)}
       _hover={{
         textDecoration: 'none',
-        color: 'violet.500',
+        color: 'violet.400',
       }}
     >
       <Flex alignItems="center" w="42">
