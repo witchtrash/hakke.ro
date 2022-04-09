@@ -15,19 +15,19 @@ const App = ({ Component, pageProps }: AppProps) => {
           content="javascript witchcraft"
           key="og-title"
         />
-        <meta name="author" content="mari" key="author" />
+        <meta name="author" content="emilía" key="author" />
 
         <link rel="icon" href="/icon.png" />
         <meta name="theme-color" content="#6B2FB6" />
 
         <meta
           name="description"
-          content="A website by an idiot."
+          content="A witch's personal website"
           key="description"
         />
         <meta
           property="og:description"
-          content="A website by an idiot."
+          content="A witch's personal website"
           key="og-description"
         />
         <meta property="og:site_name" content="hakke.ro" />
