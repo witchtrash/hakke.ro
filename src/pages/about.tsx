@@ -15,54 +15,12 @@ import {
 import { CharWrapper, Pace, Pause, WindupChildren } from 'windups';
 import { MotionBox } from 'components/MotionBox';
 import { RiHeartFill } from 'react-icons/ri';
-import { clientFactory } from 'util/supabase';
 import { BouncyLetter, ColorText } from 'components/About';
-
-interface Artist {
-  id: number;
-  artist_name: string;
-  lastfm_url: string;
-  scrobble_count: number;
-}
+import { useLastFmStats } from 'hooks/useLastFmStats';
 
 const About = () => {
-  const [scrobbleCount, setScrobbleCount] = React.useState<
-    number | undefined
-  >();
-  const [artists, setArtists] = React.useState<Artist[] | undefined>();
   const [introDone, setIntroDone] = React.useState(false);
-
-  React.useEffect(() => {
-    const getData = async () => {
-      const client = clientFactory({ useServiceKey: false });
-
-      const scrobbleData = await client
-        .from<{
-          id: number;
-          scrobble_count: number;
-        }>('scrobbles')
-        .select('id, scrobble_count')
-        .order('id', {
-          ascending: false,
-        })
-        .limit(1);
-
-      const artistData = await client
-        .from<Artist>('weekly_artists')
-        .select('id, artist_name, scrobble_count, lastfm_url')
-        .order('id', {
-          ascending: false,
-        })
-        .limit(5);
-
-      if (scrobbleData.data && artistData.data) {
-        setScrobbleCount(scrobbleData.data[0].scrobble_count);
-        setArtists(artistData.data);
-      }
-    };
-
-    getData();
-  }, []);
+  const { stats, isLoading } = useLastFmStats();
 
   return (
     <React.Fragment>
@@ -131,7 +89,7 @@ const About = () => {
                   </UnorderedList>
                 </Box>
 
-                {artists && scrobbleCount ? (
+                {!isLoading && stats?.scrobbleCount && stats.weeklyArtists ? (
                   <Box py="3">
                     <Text>
                       {`i like listening to bad music, `}
@@ -139,7 +97,7 @@ const About = () => {
                       {`i have like `}
                       <Pause ms={300} />
                       <ColorText color="pink.400">
-                        {scrobbleCount}
+                        {stats.scrobbleCount}
                         {` scrobbles`}
                       </ColorText>
                       {` on my `}
@@ -157,17 +115,22 @@ const About = () => {
                       {`lately ive been listening to `}
                       <Pause ms={300} />
                       <React.Fragment>
-                        {artists.slice(0, 4).map(artist => (
-                          <React.Fragment key={artist.id}>
-                            <Link color="violet.400" href={artist.lastfm_url}>
-                              {`${artist.artist_name}, `}
+                        {stats.weeklyArtists.slice(0, 4).map((artist, i) => (
+                          <React.Fragment
+                            key={`artist-${artist.artistName}-${i}`}
+                          >
+                            <Link color="violet.400" href={artist.url}>
+                              {`${artist.artistName}, `}
                             </Link>
                             <Pause ms={150} />
                           </React.Fragment>
                         ))}
                         {`and `}
-                        <Link color="violet.400" href={artists[4].lastfm_url}>
-                          {`${artists[4].artist_name}.`}
+                        <Link
+                          color="violet.400"
+                          href={stats.weeklyArtists[4].url}
+                        >
+                          {`${stats.weeklyArtists[4].artistName}.`}
                         </Link>
                         <Flex flexWrap="wrap">
                           <Text>{`check em out by clicking the names, if you want`}</Text>

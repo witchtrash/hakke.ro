@@ -1,8 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
+import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from 'styles/theme';
-import type { AppProps } from 'next/app';
+import { SWRConfig } from 'swr';
+import { fetcher } from 'util/fetcher';
 import 'focus-visible/dist/focus-visible';
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -46,7 +48,13 @@ const App = ({ Component, pageProps }: AppProps) => {
         />
       </Head>
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        <SWRConfig
+          value={{
+            fetcher,
+          }}
+        >
+          <Component {...pageProps} />
+        </SWRConfig>
       </ChakraProvider>
     </React.Fragment>
   );
