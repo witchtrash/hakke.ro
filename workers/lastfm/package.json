@@ -1,0 +1,21 @@
+{
+  "name": "lastfm",
+  "version": "1.0.0",
+  "description": "Last.fm Cloudflare worker",
+  "main": "dist/worker.js",
+  "scripts": {
+    "build": "webpack"
+  },
+  "author": "emilia",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^3.0.0",
+    "@types/service-worker-mock": "^2.0.1",
+    "@typescript-eslint/parser": "^4.16.1",
+    "service-worker-mock": "^2.0.5",
+    "ts-loader": "^9.2.2",
+    "typescript": "^4.3.2",
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  }
+}
