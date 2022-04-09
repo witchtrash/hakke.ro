@@ -4,12 +4,17 @@ import { RiMenu3Fill } from 'react-icons/ri';
 import { IconButton } from 'components/IconButton';
 import { MotionBox } from 'components/MotionBox';
 import { Navigation } from './Navigation';
+import { BackButton } from 'components/BackButton';
 
-export const NavigationMenu = () => {
+interface NavigationMenuProps {
+  withBackButton?: boolean;
+}
+export const NavigationMenu = (props: NavigationMenuProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Flex flexDirection="row" mb={['1rem', '1rem', '2rem']}>
+      {props.withBackButton ? <BackButton /> : null}
       <Spacer />
       <MotionBox
         w="0"
