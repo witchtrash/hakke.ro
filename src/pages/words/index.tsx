@@ -1,6 +1,6 @@
 import React from 'react';
 import { PageLayout } from 'components/Layout';
-import { Heading, Flex, Button, Wrap, VStack } from '@chakra-ui/react';
+import { Heading, Flex, Button, Wrap, VStack, Box } from '@chakra-ui/react';
 import { InferGetStaticPropsType } from 'next';
 import { NoData } from 'components/NoData';
 import { BlogCard } from 'components/BlogCard';
@@ -79,7 +79,14 @@ const BlogIndex = ({
           spacing="16"
         >
           {posts.length === 0 ? (
-            <NoData />
+            <Box
+              display="flex"
+              flexDirection="column"
+              margin="auto"
+              alignItems="center"
+            >
+              <NoData />
+            </Box>
           ) : (
             <React.Fragment>
               {posts
