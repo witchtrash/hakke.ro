@@ -3,19 +3,19 @@ import { PageLayout } from 'components/Layout';
 import { Heading, Flex, Button, Wrap, VStack, Box } from '@chakra-ui/react';
 import { InferGetStaticPropsType } from 'next';
 import { NoData } from 'components/NoData';
-import { BlogCard } from 'components/BlogCard';
+import { BlogCard } from 'components/Blog';
+import { SEO } from 'components/SEO';
 
-import fs from 'fs';
-import path from 'path';
+import { readdirSync, readFileSync } from 'fs';
+import { join, resolve } from 'path';
 import matter from 'gray-matter';
-import { Title } from 'components/Title';
 
 export interface Post {
   postId: string;
   title: string;
   description: string;
   image: string;
-  date: Date | string;
+  date: string;
   tags: string[];
 }
 
@@ -35,7 +35,7 @@ const BlogIndex = ({
 
   return (
     <React.Fragment>
-      <Title title="hakke.ro | words of dubious wisdom" />
+      <SEO title="hakke.ro | words of dubious wisdom" />
 
       <PageLayout>
         <Flex
@@ -104,7 +104,7 @@ const BlogIndex = ({
                     title={post.title}
                     description={post.description}
                     image={post.image}
-                    date={new Date(post.date)}
+                    date={post.date}
                     tags={post.tags}
                   />
                 ))}
@@ -117,17 +117,33 @@ const BlogIndex = ({
 };
 
 export const getStaticProps = async () => {
-  const blogDirectory = path.join(process.cwd(), 'src/pages/words');
+  const blogDirectory = join(process.cwd(), 'src/pages/words');
 
-  const posts = fs
-    .readdirSync(blogDirectory)
-    .filter(file => file.match(/.+\.mdx$/))
-    .map((file): Post => {
-      const postId = file.replace(/\.mdx?$/, '');
+  const postDirents = readdirSync(blogDirectory, {
+    withFileTypes: true,
+  }).filter(dirent => {
+    if (!dirent.isDirectory()) {
+      return false;
+    }
 
-      const content = fs.readFileSync(path.join(blogDirectory, file), 'utf8');
+    const contents = readdirSync(resolve(blogDirectory, dirent.name));
+
+    if (contents.length === 0) {
+      return false;
+    }
+
+    return contents.filter(file => file.match(/\.+mdx$/));
+  });
+
+  const posts = postDirents
+    .map((dirent): Post => {
+      const postId = dirent.name;
+
+      const content = readFileSync(
+        join(blogDirectory, postId, 'index.mdx'),
+        'utf8'
+      );
       const meta = matter(content).data;
-
       return {
         postId,
         title: meta['title'],

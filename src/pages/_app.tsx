@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from 'styles/theme';
 import { SWRConfig } from 'swr';
 import { fetcher } from 'util/fetcher';
+import { Provider as MDXProvider } from 'components/Blog/Provider';
 import 'focus-visible/dist/focus-visible';
 
 const App = ({ Component, pageProps }: AppProps) => {
@@ -53,7 +54,9 @@ const App = ({ Component, pageProps }: AppProps) => {
             fetcher,
           }}
         >
-          <Component {...pageProps} />
+          <MDXProvider>
+            <Component {...pageProps} />
+          </MDXProvider>
         </SWRConfig>
       </ChakraProvider>
     </React.Fragment>

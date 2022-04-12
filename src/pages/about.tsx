@@ -17,7 +17,7 @@ import { MotionBox } from 'components/MotionBox';
 import { RiHeartFill } from 'react-icons/ri';
 import { BouncyLetter, ColorText } from 'components/About';
 import { useLastFmStats } from 'hooks/useLastFmStats';
-import { Title } from 'components/Title';
+import { SEO } from 'components/SEO';
 
 const About = () => {
   const [introDone, setIntroDone] = React.useState(false);
@@ -25,7 +25,7 @@ const About = () => {
 
   return (
     <React.Fragment>
-      <Title title="hakke.ro | tiny idiot's bio" />
+      <SEO title="hakke.ro | tiny idiot's bio" />
       <Head>
         <link rel="preload" as="image" href="/assets/shy.gif" />
       </Head>

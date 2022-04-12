@@ -1,0 +1,108 @@
+---
+title: 'Stop making bad forms'
+date: '2022-12-04'
+image: 'assets/og.jpg'
+description: 'Hey! I see you reaching for that email regex, stop it!'
+tags:
+  - programming
+  - inclusivity
+---
+
+import { BlogPost } from 'components/Blog';
+
+# Stop making bad forms
+
+Bad forms are everywhere on the internet. I have fixed a lot over the years, I've written a bunch of terrible forms myself, and I have **opinions**. Here are a few things that you might want to think about when you write your next form. Some of this might make sense, some of it might not, but here are my pet peeves about forms.
+
+### Stop adding inputs for data you don't need
+
+There are a lot of forms out there that have mandatory inputs for **way** too many things. Here's the bottom line; you have no right to a user's data if it isn't vital to the app. Store what you need and no more.
+
+Let's say you're making an app that geolocates hot dog stands (do not steal my idea, I'm about to start my series A), do you really need to collect the user's date of birth on sign up? Analytics is not an excuse.
+
+### Stop breaking up the name field
+
+This one is a personal pet peeve. Some sites like to take the name field, and split it into 'first name' and 'last name', or worse, they might add a 'middle name' field. This is especially egregious if both fields are mandatory.
+
+People are varied, there are plenty of people that only have one name. How are you going to handle that? You might make the last name field optional, but you might get plenty of users that type their full name in the first name field (I have seen this plenty of times). All your reasons for splitting the fields up are now gone, because the data is junk.
+
+Another assumption you might have is that the last name is somehow more important than the last name. It isn't. A last name being a _family_ name is completely culturally dependent. For example, in Iceland, last names are matronymic or patronymic, meaning that if someone is called Something Jónsdóttir, it just means "the daughter of Jón". You would never use the last name to refer to someone in Iceland.
+
+Here's a [good article](https://www.w3.org/International/questions/qa-personal-names) on this
+
+### Stop writing email regex
+
+Stop writing regex rules to validate emails. Please, I beg of you. Here's the only concrete thing about an email address: it contains an `@` symbol. That's it. If you want to validate anything, just check if there's an `@`.
+
+Here's a list of a few valid emails
+
+- `email@email.com`
+- `email+spam@email.com`
+- `email@server`
+- `email/email@test.com`
+- `email@email.شبكة`
+- `email@[123.123.123.123]`
+- `email@[IPv6:2001:0db8:85a3:0000:0000:8a2e:0370:7334]`
+- `"super.(),:;<>[]\".mega.\"very@\\ \"cool\".email"@email.cool.中文网`
+
+Do you really want to make sure that the email is valid? Send the user an activation email.
+
+You might be thinking _"lmao who doesn't know this?"_. I literally fixed (removed) an email regex rule from a greenfield site a month ago. It checked if the TLD had 2 or 3 characters.
+
+### In fact, stop validating most things
+
+Stop adding length validation to names. People can have one letter names, in fact people can have zero letter names. Names are cultural, you can't write a regular expression for culture. Check if the length is greater than zero if you have to.
+
+Stop filtering out non-numeric characters from a phone number. Phone numbers can contain letters and symbols other than +. Also, phone numbers are **not** numbers, they're strings. This depends a lot on the country you're in, but if it's global, there's no way to properly validate it. Each country is different.
+
+Don't even try to validate addresses, they're all over the place. Just check if there's at least one character. In fact, don't ask for the address unless you actually need it. If you're not shipping something to the user, chances are you don't have to ask for their address.
+
+In short, stop assuming the input is constructed in some specific way, because it isn't. Don't overfit your form validation.
+
+### Stop adding a gender input
+
+This one is another personal pet peeve and my main reason for writing this post. Like 99% of the sites you use have absolutely no reason to know your gender, and if they implement it, chances are it's going to be badly implemented and a good example of exclusive design.
+
+If you **really** need to add a gender select, frame the question properly. Don't just add an input that says 'Gender' and you can only pick 'Male', 'Female' or 'Other'. That's a good way to dehumanize a group of people and it sucks.
+
+Frame it something like 'Which gender identity do you most identify with?', and then list a few options, male, female, non-binary, gender fluid. Have an option that's something like 'My gender identity is not listed', and another one that says 'Prefer not to say'. Optionally you can allow people to write their own gender identity in a text box if they select 'My gender identity is not listed'.
+
+Keep in mind you're asking for a complicated social construct to be fit in a single input field in an HTML form. Programmers make a lot of assumptions here, here are the most common ones I've come across.
+
+###### Assumption 1: People have one gender
+
+False, people can have multiple genders, or a gender identity that varies over time. You can't ask people to just pick one.
+
+###### Assumption 2: There's a finite amount of genders
+
+False, gender is a personal experience so it's completely unique to each person. Maybe it's finite in the sense that there are at least 7.7 billion genders. This means you can't have a list of all genders, unless you somehow include the [Library of Babel](https://libraryofbabel.info/) in your form.
+
+###### Assumption 3: A person's gender identity doesn't change
+
+This one is pretty obviously false, but I have used plenty of sites that don't allow you to change your gender after registration. Very cool.
+
+### Write better password rules
+
+Why does your app require that people have a number in their password? Is it more secure? Because it isn't.
+
+Why do people think this? Well, back in 2004, NIST published an advisory or a guideline on secure passwords. Passwords should use irregular capitalization, special characters and at least one numeral.
+
+However, back in 2017, NIST revised this. Passwords should **not** mandate special characters, nor be rotated regularly, but instead there's a simple 8 character minimum length. The main reason for this is that while passwords with special characters might _technically_ be better, as in they have more entropy and it's harder for stuff like dictionary attacks to guess the password, in reality, people just write their password down or reuse it in many different places. Despite this, people still write software conforming to the 2004 advisory.
+
+Do you really want to make something secure? Add MFA and make it mandatory. For passwords, just use a simple minimum length check (8-12) and make sure the hashing iterations are set as high as possible without affecting performance too much. Add rate limiting as well to practically eliminate brute force attacks.
+
+### Stop using security questions
+
+Security questions are just about the easiest thing in the world to socially engineer, and with like, basic OSINT skills, you can do it without even talking to the person. If the secret question is something like 'Where were you born?', that's incredibly easy to find out, and it's dead easy to compromise the account.
+
+Thankfully security questions have mostly faded away, but the spectres of the past still linger. Most programmers know this, but I wanted to mention it because I hate them.
+
+### Conclusions
+
+This list is not exhaustive, and I might revise it later on. Forms really boil down to simple is best. Don't ask for more data than you need, don't overzealously validate the data, and don't add stupid restrictions to them.
+
+Make your sign up form easy and simple to use, because it's probably one of the first things a new user is going to see.
+
+export default ({ children }) => (
+  <BlogPost title="hakke.ro | Making better forms">{children}</BlogPost>
+);

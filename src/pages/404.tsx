@@ -2,11 +2,11 @@ import React from 'react';
 import { PageLayout } from 'components/Layout';
 import { Flex, Heading } from '@chakra-ui/react';
 import { MotionBox } from 'components/MotionBox';
-import { Title } from 'components/Title';
+import { SEO } from 'components/SEO';
 
 const NotFound = () => (
   <React.Fragment>
-    <Title title="hakke.ro | stranger still are lost pages" />
+    <SEO title="hakke.ro | stranger still are lost pages" />
 
     <PageLayout withBackButton>
       <Flex
