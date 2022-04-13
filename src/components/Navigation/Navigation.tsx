@@ -48,14 +48,17 @@ export const Navigation = (props: NavigationProps) => {
             </MotionBox>
           </Flex>
 
-          <Flex
-            justifyContent="flex-end"
-            borderBottom="0.25rem solid aquamarine"
+          <MotionBox
+            animate={props.isOpen ? 'open' : 'closed'}
+            variants={animations.bottom}
           >
-            <MotionBox animate={props.isOpen ? 'open' : 'closed'}>
+            <Flex
+              justifyContent="flex-end"
+              borderBottom="0.25rem solid aquamarine"
+            >
               <Moji />
-            </MotionBox>
-          </Flex>
+            </Flex>
+          </MotionBox>
         </Container>
       </Slide>
     </Portal>

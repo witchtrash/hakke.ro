@@ -29,7 +29,21 @@ const item: Variants = {
   },
 };
 
+const bottom: Variants = {
+  open: {
+    opacity: 1,
+    transition: {
+      delay: 0.6,
+      duration: 0.6,
+    },
+  },
+  closed: {
+    opacity: 0,
+  },
+};
+
 export const animations = {
   list,
   item,
+  bottom,
 };
