@@ -1,6 +1,6 @@
 ---
 title: 'Stop making bad forms'
-date: '2022-12-04'
+date: '2022-04-12'
 image: 'assets/og.jpg'
 description: 'Hey! I see you reaching for that email regex, stop it!'
 tags:
@@ -9,24 +9,26 @@ tags:
 ---
 
 import { BlogPost } from 'components/Blog';
+import { PageLayout } from 'components/Layout';
+import { GenderIdentityInput } from './GenderIdentityInput';
 
 # Stop making bad forms
 
-Bad forms are everywhere on the internet. I have fixed a lot over the years, I've written a bunch of terrible forms myself, and I have **opinions**. Here are a few things that you might want to think about when you write your next form. Some of this might make sense, some of it might not, but here are my pet peeves about forms.
+Bad forms are everywhere on the internet. I have fixed a lot over the years, I've written a bunch of terrible forms myself, and I have **opinions**. Some of this might make sense, some of it might not.
 
 ### Stop adding inputs for data you don't need
 
 There are a lot of forms out there that have mandatory inputs for **way** too many things. Here's the bottom line; you have no right to a user's data if it isn't vital to the app. Store what you need and no more.
 
-Let's say you're making an app that geolocates hot dog stands (do not steal my idea, I'm about to start my series A), do you really need to collect the user's date of birth on sign up? Analytics is not an excuse.
+Let's say you're making an app that geolocates hot dog stands (do not steal my idea, I'm about to start my series A), do you really need to collect the user's date of birth on sign up? Maybe there are some laws in some places in the world where peope under the age of 13 can't eat hot dogs, and you want to conform to this. Again, a date of birth field here isn't needed, a simple check box that says like 'I am over the age of 13' is enough, and you skip saving potentially sensitive personal information.
 
 ### Stop breaking up the name field
 
-This one is a personal pet peeve. Some sites like to take the name field, and split it into 'first name' and 'last name', or worse, they might add a 'middle name' field. This is especially egregious if both fields are mandatory.
+Some sites like to take the name field, and split it into 'first name' and 'last name', or worse, they might add a 'middle name' field. This is especially egregious if all the fields are mandatory.
 
-People are varied, there are plenty of people that only have one name. How are you going to handle that? You might make the last name field optional, but you might get plenty of users that type their full name in the first name field (I have seen this plenty of times). All your reasons for splitting the fields up are now gone, because the data is junk.
+People are varied, there are plenty of people that only have one name. You handle this by making the last name field optional, but you might get plenty of users that type their full name in the first name field. All your reasons for splitting the fields up are now gone, because the data is all over the place.
 
-Another assumption you might have is that the last name is somehow more important than the last name. It isn't. A last name being a _family_ name is completely culturally dependent. For example, in Iceland, last names are matronymic or patronymic, meaning that if someone is called Something Jónsdóttir, it just means "the daughter of Jón". You would never use the last name to refer to someone in Iceland.
+Another assumption you might have is that the last name is somehow more noteworthy than the last name. It isn't in a lot of places in the world. A last name being a _family_ name is completely culturally dependent. For example, in Iceland, last names are matronymic or patronymic, meaning that if someone is called Something Jónsdóttir, it just means "the daughter of Jón". You would never use the last name to refer to someone in Iceland.
 
 Here's a [good article](https://www.w3.org/International/questions/qa-personal-names) on this
 
@@ -47,25 +49,25 @@ Here's a list of a few valid emails
 
 Do you really want to make sure that the email is valid? Send the user an activation email.
 
-You might be thinking _"lmao who doesn't know this?"_. I literally fixed (removed) an email regex rule from a greenfield site a month ago. It checked if the TLD had 2 or 3 characters.
-
 ### In fact, stop validating most things
 
-Stop adding length validation to names. People can have one letter names, in fact people can have zero letter names. Names are cultural, you can't write a regular expression for culture. Check if the length is greater than zero if you have to.
+A very common mistake I've seen is programmers overfitting their form validation to how they think data _should_ look. For example, phone numbers in Iceland are 7 digits, so programmers here tend to just validate that the phone number is exactly 7 digits, no more, and no less.
 
-Stop filtering out non-numeric characters from a phone number. Phone numbers can contain letters and symbols other than +. Also, phone numbers are **not** numbers, they're strings. This depends a lot on the country you're in, but if it's global, there's no way to properly validate it. Each country is different.
+This is bad for a variety of reasons, what if someone wants to sign up and they don't have an Icelandic phone number? This isn't unreasonable.
 
-Don't even try to validate addresses, they're all over the place. Just check if there's at least one character. In fact, don't ask for the address unless you actually need it. If you're not shipping something to the user, chances are you don't have to ask for their address.
+Consider your use case, does it really matter if a phone number is valid for your app? If it is, don't just try to validate it, actually verify that the phone number is valid and exists before you let your users continue. Use a service to send an SMS or something. If it isn't, just let users write whatever they want in there, or skip the field entirely.
 
-In short, stop assuming the input is constructed in some specific way, because it isn't. Don't overfit your form validation.
+It's always better to verify than validate, but keep in mind that verification has a number of downsides as well, I've signed up to services that just haven't been able to send an SMS to my phone number, so I haven't been able to complete my registration. The funny thing is that nothing in the app itself actually requires you to have a valid phone number, so it's just a completely arbitrary restriction.
 
 ### Stop adding a gender input
 
-This one is another personal pet peeve and my main reason for writing this post. Like 99% of the sites you use have absolutely no reason to know your gender, and if they implement it, chances are it's going to be badly implemented and a good example of exclusive design.
+This one gets under my skin a bit, and it's my main reason for writing this post. Like 99% of the sites you use have absolutely no reason to know your gender, and if they implement it, chances are it's going to be badly implemented and a good example of exclusive design.
 
-If you **really** need to add a gender select, frame the question properly. Don't just add an input that says 'Gender' and you can only pick 'Male', 'Female' or 'Other'. That's a good way to dehumanize a group of people and it sucks.
+If you **really** need to add a gender select, frame the question properly. Don't just add an input that says 'Gender' and you can only pick 'Male', 'Female' or 'Other'. That's a good way to dehumanize a group of people.
 
-Frame it something like 'Which gender identity do you most identify with?', and then list a few options, male, female, non-binary, gender fluid. Have an option that's something like 'My gender identity is not listed', and another one that says 'Prefer not to say'. Optionally you can allow people to write their own gender identity in a text box if they select 'My gender identity is not listed'.
+Personally, I would frame it something like 'Which gender identity do you most identify with?', make the field a text input with a dropdown that would autocomplete to a few common gender identities. Here's a rough example.
+
+<GenderIdentityInput />
 
 Keep in mind you're asking for a complicated social construct to be fit in a single input field in an HTML form. Programmers make a lot of assumptions here, here are the most common ones I've come across.
 
@@ -83,26 +85,124 @@ This one is pretty obviously false, but I have used plenty of sites that don't a
 
 ### Write better password rules
 
-Why does your app require that people have a number in their password? Is it more secure? Because it isn't.
+Stop adding arbitrary password composition requirement unless you have a very good reason to do so. There's no reason to require that a password should contain a special character, a number, an emoji, a non-printable ASCII character and a control sequence.
 
 Why do people think this? Well, back in 2004, NIST published an advisory or a guideline on secure passwords. Passwords should use irregular capitalization, special characters and at least one numeral.
 
 However, back in 2017, NIST revised this. Passwords should **not** mandate special characters, nor be rotated regularly, but instead there's a simple 8 character minimum length. The main reason for this is that while passwords with special characters might _technically_ be better, as in they have more entropy and it's harder for stuff like dictionary attacks to guess the password, in reality, people just write their password down or reuse it in many different places. Despite this, people still write software conforming to the 2004 advisory.
 
-Do you really want to make something secure? Add MFA and make it mandatory. For passwords, just use a simple minimum length check (8-12) and make sure the hashing iterations are set as high as possible without affecting performance too much. Add rate limiting as well to practically eliminate brute force attacks.
+If you really want to improve login security, add MFA (preferrably TOTP) and make it mandatory. For passwords, just use a simple minimum length check (8-12) and make sure the hashing iterations are set as high as possible without affecting performance too much. Add rate limiting as well to practically eliminate brute force attacks.
 
 ### Stop using security questions
 
-Security questions are just about the easiest thing in the world to socially engineer, and with like, basic OSINT skills, you can do it without even talking to the person. If the secret question is something like 'Where were you born?', that's incredibly easy to find out, and it's dead easy to compromise the account.
+Security questions are just about the easiest thing in the world to social engineer, and with like, basic OSINT skills, you can do it without even talking to the person. If the secret question is something like 'Where were you born?', that's incredibly easy to find out, and it's dead easy to compromise the account.
 
 Thankfully security questions have mostly faded away, but the spectres of the past still linger. Most programmers know this, but I wanted to mention it because I hate them.
 
+### Be wary of native HTML input elements
+
+Native HTML input elements seem great on paper, let's say you want to allow a user to input a decimal number, you can do something like this
+
+```html
+<input id="decimal" type="number" min="0" max="10" step="any" />
+```
+
+and it should just work, right? Well, yes but also no. Consider this terrible form code
+
+```tsx
+const [decimal, setDecimal] = React.useState('');
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  console.log(Number(decimal));
+};
+
+const handleDecimal = (e: React.FormEvent<HTMLInputElement>) => {
+  setDecimal(e.currentTarget.value);
+};
+
+return (
+  <form onSubmit={handleSubmit}>
+    <input
+      name="decimal"
+      type="number"
+      min="0"
+      max="2000000"
+      step="any"
+      value={decimal}
+      lang="is-IS"
+      onChange={handleDecimal}
+    />
+    <button type="submit">less go</button>
+  </form>
+);
+```
+
+We create an input element and a state, the valid input is any number between `0` and `2 000 000`. The user's locale is also set in the form (I just cheated here and hard coded it). If we try this in Firefox, we can input the number `2,5` and it logs `2.5`. All good, it supports the Icelandic decimal separator `,`.
+
+Then we try inputting `1.000.000`, the input validation fails, so thousands separator aren't supported. That's fine. If we try `1.500` however, it returns `1.5`, uh oh. Both `,` and `.` are parsed as a decimal separator.
+
+If we do the same tests in Chrome, the second `,` or `.` typed is filtered out by the input, meaning if we try to write `1.000.000`, it ends up as `1.000000`, which is then parsed as `1`. Both separators are parsed as a decimal separator here as well.
+
+Consider something like this
+
+```tsx
+const [decimal, setDecimal] = React.useState('');
+
+const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+
+  // Fetch the user's locale thousands separator with Intl using a sentinel value
+  const groups = Intl.NumberFormat('is-IS').formatToParts(1000.1);
+  const thousandsSeperator = groups[1].value;
+  const decimalSeparator = groups[3].value;
+
+  const decimalValue = Number.parseFloat(
+    decimal.replaceAll(thousandsSeperator, '').replaceAll(decimalSeparator, '.')
+  );
+
+  if (Number.isNaN(decimalValue)) {
+    // Scold the user with an error message
+    console.error('Invalid format :O');
+  } else {
+    console.log(decimalValue);
+  }
+};
+
+const handleDecimal = (e: React.FormEvent<HTMLInputElement>) => {
+  setDecimal(e.currentTarget.value);
+};
+
+return (
+  <form onSubmit={handleSubmit}>
+    <input name="decimal" value={decimal} onChange={handleDecimal} />
+    <button type="submit">less go</button>
+  </form>
+);
+```
+
+By not using `type="number"`, we can support localized number inputs. I should point out that both of these examples are terrible and you shouldn't write form logic like this.
+
+### Make sure the tab order in your form is sensible
+
+A lot of users use the tab key to go through your form inputs, and a bad tab order will really impact the usability and accessibility of your app. A general rule of thumb is your tab order should go from top to bottom, left to right.
+
+Make sure the last element in your form that is tabbable is the submit button.
+
+### Make sure the enter key submits the form
+
+This one is pretty simple, but super annoying and common. There are a lot of forms out there that won't submit unless you click the submit button with your mouse.
+
+It's a pretty easy fix too, make sure you wrap your elements in something that composes `form` and use a `onSubmit` handler instead of just handling `onClick` on the submit button.
+
 ### Conclusions
 
-This list is not exhaustive, and I might revise it later on. Forms really boil down to simple is best. Don't ask for more data than you need, don't overzealously validate the data, and don't add stupid restrictions to them.
+There's quite a few things to keep in mind when making good forms, and there's a **lot** of really bad resources out there.
 
-Make your sign up form easy and simple to use, because it's probably one of the first things a new user is going to see.
+A form is often the first thing a user will interact with on your site, so it's a good chance to make a good (or bad) impression.
 
 export default ({ children }) => (
-  <BlogPost title="hakke.ro | Making better forms">{children}</BlogPost>
+  <PageLayout withBackButton>
+    <BlogPost title="hakke.ro | Making better forms">{children}</BlogPost>
+  </PageLayout>
 );
