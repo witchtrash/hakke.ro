@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavigationMenu } from 'components/Navigation';
 import { Container } from 'components/Layout/Container';
 import { SEO } from 'components/SEO';
 
@@ -8,11 +7,8 @@ interface BlogPostProps {
   title: string;
 }
 export const BlogPost = (props: BlogPostProps) => (
-  <Container as="main" minH="unset">
+  <Container marginX="auto" as="article" maxW="960px" minH="unset" w="100%">
     <SEO title={props.title} />
-    <NavigationMenu withBackButton />
-    <Container marginX="auto" as="article" maxW="960px" minH="unset" w="100%">
-      {props.children}
-    </Container>
+    {props.children}
   </Container>
 );

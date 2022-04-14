@@ -1,14 +1,25 @@
 import React from 'react';
 import Head from 'next/head';
+import { NextPage } from 'next';
 import type { AppProps } from 'next/app';
 import { ChakraProvider } from '@chakra-ui/react';
 import { theme } from 'styles/theme';
 import { SWRConfig } from 'swr';
 import { fetcher } from 'util/fetcher';
-import { Provider as MDXProvider } from 'components/Blog/Provider';
+import { MarkdownProvider } from 'components/Blog';
 import 'focus-visible/dist/focus-visible';
 
-const App = ({ Component, pageProps }: AppProps) => {
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: React.ReactElement) => React.ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+const App = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? (page => page);
+
   return (
     <React.Fragment>
       <Head>
@@ -54,9 +65,9 @@ const App = ({ Component, pageProps }: AppProps) => {
             fetcher,
           }}
         >
-          <MDXProvider>
-            <Component {...pageProps} />
-          </MDXProvider>
+          <MarkdownProvider>
+            {getLayout(<Component {...pageProps} />)}
+          </MarkdownProvider>
         </SWRConfig>
       </ChakraProvider>
     </React.Fragment>

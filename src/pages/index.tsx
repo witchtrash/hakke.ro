@@ -5,11 +5,15 @@ import { VerticalLine } from 'components/Decoration/VerticalLine';
 
 const Index = () => {
   return (
-    <PageLayout>
+    <React.Fragment>
       <Decoration />
       <VerticalLine />
-    </PageLayout>
+    </React.Fragment>
   );
+};
+
+Index.getLayout = function getLayout(page: React.ReactElement) {
+  return <PageLayout>{page}</PageLayout>;
 };
 
 export default Index;

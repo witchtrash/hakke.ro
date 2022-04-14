@@ -39,10 +39,19 @@ export const Navigation = (props: NavigationProps) => {
               animate={props.isOpen ? 'open' : 'closed'}
               variants={animations.list}
             >
-              <NavigationLink href="/">home</NavigationLink>
-              <NavigationLink href="/about">about</NavigationLink>
-              <NavigationLink href="/words">words</NavigationLink>
-              <NavigationLink href="https://github.com/witchtrash">
+              <NavigationLink href="/" onClick={props.onClose}>
+                home
+              </NavigationLink>
+              <NavigationLink href="/about" onClick={props.onClose}>
+                about
+              </NavigationLink>
+              <NavigationLink href="/words" onClick={props.onClose}>
+                words
+              </NavigationLink>
+              <NavigationLink
+                href="https://github.com/witchtrash"
+                onClick={props.onClose}
+              >
                 code
               </NavigationLink>
             </MotionBox>

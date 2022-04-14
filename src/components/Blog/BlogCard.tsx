@@ -11,10 +11,11 @@ import {
 import Link from 'next/link';
 import { MotionBox } from 'components/MotionBox';
 import { Post } from 'pages/words';
+import { format } from 'date-fns';
 
 export const BlogCard = (props: Post) => {
   const formatDate = (date: string) => {
-    return new Intl.DateTimeFormat().format(new Date(date));
+    return format(new Date(date), 'LLLL do, u');
   };
 
   return (
@@ -54,7 +55,7 @@ export const BlogCard = (props: Post) => {
               <Heading color="pink.300" fontSize="0.75rem">
                 {formatDate(props.date)}
               </Heading>
-              <Link href={`words/${props.postId}`} passHref>
+              <Link href={`/words/${props.postId}`} passHref>
                 <LinkOverlay>
                   <Heading>{props.title}</Heading>
                 </LinkOverlay>

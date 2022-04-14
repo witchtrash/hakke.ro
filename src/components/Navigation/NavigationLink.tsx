@@ -8,12 +8,14 @@ import { animations } from './animations';
 interface NavigationLinkProps {
   href: string;
   children: React.ReactChild;
+  onClick: () => void;
 }
 export const NavigationLink = (props: NavigationLinkProps) => {
   const router = useRouter();
 
   return (
     <MotionBox
+      onClick={props.onClick}
       variants={animations.item}
       my="6"
       whileHover={{
