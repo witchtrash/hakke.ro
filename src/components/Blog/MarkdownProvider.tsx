@@ -7,10 +7,11 @@ import {
   Text,
   TextProps,
   Link,
-  Code,
+  Code as ChakraCode,
   UnorderedList,
   ListItem,
 } from '@chakra-ui/react';
+import { Code } from './Code';
 import { MotionBox } from 'components/MotionBox';
 
 type ProviderProps = React.ComponentPropsWithoutRef<typeof MDXProvider>;
@@ -81,12 +82,8 @@ export const MarkdownProvider = (props: ProviderProps) => (
       h6: p => <H6 {...p} />,
       p: p => <P {...p} />,
       a: p => <Link fontWeight="bold" color="violet.400" {...p} />,
-      code: p => <Code {...p} />,
-      pre: p => (
-        <Code mx="auto" p="3" my="4">
-          <pre {...p} />
-        </Code>
-      ),
+      code: p => <ChakraCode {...p} />,
+      pre: p => <Code>{p.children}</Code>,
       ul: p => <UnorderedList pl="2" {...p} />,
       li: p => <ListItem {...p} />,
       blockquote: p => <Blockquote>{p.children}</Blockquote>,

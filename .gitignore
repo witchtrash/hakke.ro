@@ -71,3 +71,5 @@ yarn-error.log
 .vercel
 
 *.zip
+
+src/pages/words/.drafts
