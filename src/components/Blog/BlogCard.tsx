@@ -21,7 +21,7 @@ export const BlogCard = (props: Post) => {
       display="flex"
       as="article"
       flexDirection="column"
-      transitionDuration="200ms"
+      transitionDuration="400ms"
       transitionTimingFunction="ease-in-out"
       _hover={{
         background: 'pink.50',
@@ -46,7 +46,8 @@ export const BlogCard = (props: Post) => {
               <Tag
                 fontFamily="heading"
                 fontSize="xs"
-                colorScheme="pink"
+                background="violet.50"
+                color="violet.400"
                 key={`${tag}-${i}`}
               >
                 {tag}

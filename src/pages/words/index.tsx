@@ -8,6 +8,7 @@ import { SEO } from 'components/SEO';
 import { compareAsc } from 'date-fns';
 import { MotionBox } from 'components/MotionBox';
 import { animations } from './animations';
+import { AnimatePresence } from 'framer-motion';
 
 import { readdirSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
@@ -64,41 +65,45 @@ const BlogIndex = ({
           ))}
         </Wrap>
       </Flex>
-      <VStack py="12" align="stretch" marginX="auto" spacing="8">
-        {posts.length === 0 ? (
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <NoData />
-          </Box>
-        ) : (
-          <MotionBox
-            variants={animations.list}
-            initial="hidden"
-            animate="visible"
-          >
-            {posts
-              .filter(post => {
-                if (activeFilter) {
-                  return post.tags.includes(activeFilter);
-                } else {
-                  return true;
-                }
-              })
-              .map(post => (
-                <MotionBox
-                  key={`post-${post.postId}`}
-                  variants={animations.item}
-                >
-                  <BlogCard
-                    postId={post.postId}
-                    title={post.title}
-                    date={post.date}
-                    tags={post.tags}
-                  />
-                </MotionBox>
-              ))}
-          </MotionBox>
-        )}
-      </VStack>
+      <MotionBox
+        variants={animations.list}
+        initial="hidden"
+        animate="visible"
+        layout
+      >
+        <VStack py="12" align="stretch">
+          {posts.length === 0 ? (
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <NoData />
+            </Box>
+          ) : (
+            <AnimatePresence>
+              {posts
+                .filter(post => {
+                  if (activeFilter) {
+                    return post.tags.includes(activeFilter);
+                  } else {
+                    return true;
+                  }
+                })
+                .map(post => (
+                  <MotionBox
+                    variants={animations.item}
+                    exit={{ opacity: 0, y: 10 }}
+                    key={`post-${post.postId}`}
+                  >
+                    <BlogCard
+                      postId={post.postId}
+                      title={post.title}
+                      date={post.date}
+                      tags={post.tags}
+                    />
+                  </MotionBox>
+                ))}
+            </AnimatePresence>
+          )}
+        </VStack>
+      </MotionBox>
     </React.Fragment>
   );
 };
