@@ -7,22 +7,19 @@ import {
   Text,
   TextProps,
   Link,
-  Code as ChakraCode,
   UnorderedList,
   ListItem,
+  Image,
+  ImageProps,
 } from '@chakra-ui/react';
 import { Code } from './Code';
-import { MotionBox } from 'components/MotionBox';
+import { MotionWrapper } from './MotionWrapper';
 
 type ProviderProps = React.ComponentPropsWithoutRef<typeof MDXProvider>;
 
 interface ChildrenProps {
   children: React.ReactNode;
 }
-
-const MotionWrapper = (
-  props: React.ComponentPropsWithoutRef<typeof MotionBox>
-) => <MotionBox opacity="0" whileInView={{ opacity: 1 }} {...props} />;
 
 const H1 = (props: HeadingProps) => (
   <MotionWrapper>
@@ -64,6 +61,26 @@ const P = (props: TextProps) => (
   </MotionWrapper>
 );
 
+const InlineCode = (props: ChildrenProps) => (
+  <Text
+    as="span"
+    fontFamily="mono"
+    background="#fbfbfb"
+    color="purple.600"
+    px="1"
+    py="0.25"
+    mx="0.5"
+  >
+    {props.children}
+  </Text>
+);
+
+const Img = (props: ImageProps) => (
+  <a href={props.src}>
+    <Image mx="auto" p="4" my="4" {...props} />
+  </a>
+);
+
 const Blockquote = (props: ChildrenProps) => (
   <Box borderColor="pink.200" borderLeftWidth="medium" px="3" my="2">
     {props.children}
@@ -80,10 +97,11 @@ export const MarkdownProvider = (props: ProviderProps) => (
       h4: p => <H4 {...p} />,
       h5: p => <H5 {...p} />,
       h6: p => <H6 {...p} />,
+      img: p => <Img {...p} />,
       p: p => <P {...p} />,
       a: p => <Link fontWeight="bold" color="violet.400" {...p} />,
-      code: p => <ChakraCode {...p} />,
-      pre: p => <Code>{p.children}</Code>,
+      code: p => <InlineCode>{p.children}</InlineCode>,
+      pre: p => <Code className={p.className}>{p.children}</Code>,
       ul: p => <UnorderedList pl="2" {...p} />,
       li: p => <ListItem {...p} />,
       blockquote: p => <Blockquote>{p.children}</Blockquote>,

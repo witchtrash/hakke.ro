@@ -1,0 +1,165 @@
+---
+title: 'DCTF 22 - SQL Tutor'
+date: '2022-04-17'
+description: 'Write-up for the SQL tutor challenge in DCTF 22'
+tags:
+  - ctf
+  - web
+  - sql
+---
+
+import { BlogPost } from 'components/Blog';
+import { PageLayout } from 'components/Layout';
+
+# DCTF 22 - SQL Tutor
+
+I recently participated in DragonSec SI's DCTF and solved this little web challenge. The challenge consisted of a website where you could write in parameters into an SQL "tutor".
+
+![Query 0](/assets/blog/dctf-sql-tutor/query-00.jpg)
+
+You can write whatever into the input box, and it gets fed as a parameter into the query. Without prepared statements, this will be vulnerable to an SQL injection, so I'm guessing that's the attack vector here. Typing `' OR 1 = 1; -- '` to check for injection gives us a warning.
+
+![Error](/assets/blog/dctf-sql-tutor/error-00.jpg)
+
+Looks like there's some input validation, let's check out the JavaScript source.
+
+```js
+$(() => {
+  const executeQuery = (text, signature, queryNo) => {
+    // text here is base64 encoded
+    // signature confirms, that there is nothing malicious in the text
+    // queryNo is used to identify the query that will be executed
+    $.ajax({
+      url: '/execute',
+      method: 'POST',
+      data: {
+        // Backend devs said that the text should be base64 encoded
+        text,
+        signature,
+        queryNo,
+        //debug:true,
+      },
+    }).done(data => {
+      if (data.status === 'ok') {
+        //Write query to pre in html
+        $('#query_results').html(`<pre>Executed: ${data.query}</pre>`);
+        const results = data.results || [];
+        if (data.description) {
+          $('#query_results').append(`<p>${data.description}</p>`);
+        }
+        if (results.length > 0) {
+          //Write results into html table
+          const fields = Object.keys(results[0]);
+          //capitalize first letter of each word
+          $('#query_results')
+            .append(`<table class="table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>#</th>
+            ${fields
+              .map(
+                field =>
+                  `<th>${field.charAt(0).toUpperCase() + field.slice(1)}</th>`
+              )
+              .join('')}
+          </tr>
+        </thead>
+        <tbody>
+          ${results
+            .map(
+              (result, index) => `<tr>
+            <td>${index + 1}</td>
+            ${fields.map(field => `<td>${result[field]}</td>`).join('')}
+          </tr>`
+            )
+            .join('')}
+        </tbody>
+      </table>`);
+        } else {
+          $('#query_results').append(`<p>No results found</p>`);
+        }
+      }
+    });
+  };
+
+  $('#query_execute').on('click', () => {
+    const contents = $('#query_text').val();
+    const queryNo = $('#query_no').val();
+    if (!contents) {
+      alert('Please enter some text');
+      return;
+    }
+
+    // Because people continously try to break the app,
+    // we need to make sure that the text is checked and signed
+    $.ajax({
+      type: 'POST',
+      url: '/verify_and_sign_text',
+      data: {
+        // Backend devs said that the query should be base64 encoded
+        text: btoa(contents),
+        alg: 'sha1',
+        //debug:true
+      },
+    })
+      .done(data => {
+        if (data.status === 'ok') {
+          // Overwrite sanitized query
+          $('#query_text').val(atob(data.trimmedText));
+          executeQuery(data.trimmedText, data.signature, queryNo);
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(errdata => {
+        console.error(errdata);
+      });
+  });
+});
+```
+
+Looks like the query consists of two calls to some server, the first `/verify_and_sign_text` seems to verify the input string for dangerous symbols, and gives it some signature. The second call then expects a query and a signature. There are also two commented out `debug` parameters, ooh.
+
+Let's plug these into [Insomnia](https://insomnia.rest/), and see what we can do. With a dangerous input, we get an error.
+
+![Query](/assets/blog/dctf-sql-tutor/query-01.jpg)
+
+Note that the input is Base64 encoded, I used [CyberChef](https://gchq.github.io/CyberChef/) to encode my input. If we try this with something like the string "test", we get a response and a signature.
+
+![Query](/assets/blog/dctf-sql-tutor/query-02.jpg)
+
+We also get some more info with the `debug` parameter, namely that the hashing algorithm used is `sha1` and the signature is a `secret` concatted with the sanitized input. There's no way we can reverse that since we don't know the secret, and it's concatted to the sanitized text anyways, so it's a dead end.
+
+Let's check out the second call, `/execute`, let's try it with a random input and a random signature.
+
+![Query](/assets/blog/dctf-sql-tutor/query-03.jpg)
+
+It gives us an error, since it checks the signature, but with the debug parameter, it actually returns what the signature should be in the compare parameter. Very handy.
+
+![Query](/assets/blog/dctf-sql-tutor/query-04.jpg)
+
+If we take the signature from the response and plug it back into the signature field in the request, we can sign any request, and we skip the verify step too. Let's try this with `' OR 1 = 1; -- '` to check for SQL injection.
+
+![Query](/assets/blog/dctf-sql-tutor/query-05.jpg)
+
+Cool, we got an SQL injection. What we can do next here is list all the tables in the database to see if there are any interesting tables in the database we can query. We can do this with `UNION SELECT`. Our query should look something like this.
+
+```sql
+SELECT * FROM users WHERE users.name='' UNION SELECT table_schema, table_name, 1, 1 FROM information_schema.tables; -- '
+```
+
+So the injectable part is `' UNION SELECT table_schema, table_name, 1, 1 FROM information_schema.tables; -- `, we Base64 encode that and plug it into the `/execute` function and add the signature, and we have a full list of all the tables in the database. The two extra `1, 1` are added to make sure the columns returned from `UNION SELECT` match the original data, the user's table. It has 4 columns, so our injected query has to select 4 columns too.
+
+![Query](/assets/blog/dctf-sql-tutor/query-06.jpg)
+
+Looks like there's a `flags` table, pog. We use the same `UNION SELECT` injection to select from the `flags` table instead of `information_schema.tables`, and hopefully we get the flag there. Our injected part looks like this `' UNION SELECT *, 1, 1 FROM flags; -- `.
+
+![Query](/assets/blog/dctf-sql-tutor/query-07.jpg)
+
+Flag get.
+
+export default ({ children }) => (
+  <PageLayout withBackButton>
+    <BlogPost title="hakke.ro | DCTF 22 - SQL Tutor">{children}</BlogPost>
+  </PageLayout>
+);

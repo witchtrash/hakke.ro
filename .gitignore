@@ -72,4 +72,4 @@ yarn-error.log
 
 *.zip
 
-src/pages/words/.drafts
+src/pages/words/drafts

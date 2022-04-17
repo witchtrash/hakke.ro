@@ -14,8 +14,6 @@ import matter from 'gray-matter';
 export interface Post {
   postId: string;
   title: string;
-  description: string;
-  image: string;
   date: string;
   tags: string[];
 }
@@ -64,21 +62,9 @@ const BlogIndex = ({
           ))}
         </Wrap>
       </Flex>
-      <VStack
-        py="12"
-        align="stretch"
-        maxW="1280px"
-        w="100%"
-        marginX="auto"
-        spacing="16"
-      >
+      <VStack py="12" align="stretch" marginX="auto" spacing="8">
         {posts.length === 0 ? (
-          <Box
-            display="flex"
-            flexDirection="column"
-            margin="auto"
-            alignItems="center"
-          >
+          <Box display="flex" flexDirection="column" alignItems="center">
             <NoData />
           </Box>
         ) : (
@@ -96,8 +82,6 @@ const BlogIndex = ({
                   key={`post-${post.postId}`}
                   postId={post.postId}
                   title={post.title}
-                  description={post.description}
-                  image={post.image}
                   date={post.date}
                   tags={post.tags}
                 />
@@ -115,7 +99,7 @@ export const getStaticProps = async () => {
   const postDirents = readdirSync(blogDirectory, {
     withFileTypes: true,
   }).filter(dirent => {
-    if (!dirent.isDirectory()) {
+    if (!dirent.isDirectory() || dirent.name === 'drafts') {
       return false;
     }
 
@@ -140,13 +124,11 @@ export const getStaticProps = async () => {
       return {
         postId,
         title: meta['title'],
-        image: meta['image'],
-        description: meta['description'] ?? '',
         date: meta['date'],
         tags: meta['tags'],
       };
     })
-    .sort((a, b) => compareAsc(new Date(a.date), new Date(b.date)));
+    .sort((a, b) => compareAsc(new Date(b.date), new Date(a.date)));
 
   const tags = Array.from(new Set([...posts.map(p => p.tags)].flat()));
 

