@@ -6,6 +6,8 @@ import { NoData } from 'components/NoData';
 import { BlogCard } from 'components/Blog';
 import { SEO } from 'components/SEO';
 import { compareAsc } from 'date-fns';
+import { MotionBox } from 'components/MotionBox';
+import { animations } from './animations';
 
 import { readdirSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
@@ -68,7 +70,11 @@ const BlogIndex = ({
             <NoData />
           </Box>
         ) : (
-          <React.Fragment>
+          <MotionBox
+            variants={animations.list}
+            initial="hidden"
+            animate="visible"
+          >
             {posts
               .filter(post => {
                 if (activeFilter) {
@@ -78,15 +84,19 @@ const BlogIndex = ({
                 }
               })
               .map(post => (
-                <BlogCard
+                <MotionBox
                   key={`post-${post.postId}`}
-                  postId={post.postId}
-                  title={post.title}
-                  date={post.date}
-                  tags={post.tags}
-                />
+                  variants={animations.item}
+                >
+                  <BlogCard
+                    postId={post.postId}
+                    title={post.title}
+                    date={post.date}
+                    tags={post.tags}
+                  />
+                </MotionBox>
               ))}
-          </React.Fragment>
+          </MotionBox>
         )}
       </VStack>
     </React.Fragment>
