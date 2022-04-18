@@ -7,12 +7,47 @@ import { BlogCard } from 'components/Blog';
 import { SEO } from 'components/SEO';
 import { compareAsc } from 'date-fns';
 import { MotionBox } from 'components/MotionBox';
-import { animations } from './animations';
 import { AnimatePresence } from 'framer-motion';
 
 import { readdirSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import matter from 'gray-matter';
+
+import { Variants } from 'framer-motion';
+
+const list: Variants = {
+  visible: {
+    opacity: 1,
+    transition: {
+      when: 'beforeChildren',
+      staggerChildren: 0.07,
+    },
+  },
+  hidden: {
+    opacity: 0,
+    transition: {
+      when: 'afterChildren',
+    },
+  },
+};
+
+const item: Variants = {
+  visible: {
+    y: 0,
+    opacity: 1,
+    display: 'block',
+    transition: {
+      duration: 0.6,
+    },
+  },
+  hidden: {
+    y: 10,
+    opacity: 0,
+    transitionEnd: {
+      display: 'none',
+    },
+  },
+};
 
 export interface Post {
   postId: string;
@@ -65,12 +100,7 @@ const BlogIndex = ({
           ))}
         </Wrap>
       </Flex>
-      <MotionBox
-        variants={animations.list}
-        initial="hidden"
-        animate="visible"
-        layout
-      >
+      <MotionBox variants={list} initial="hidden" animate="visible" layout>
         <VStack py="12" align="stretch">
           {posts.length === 0 ? (
             <Box display="flex" flexDirection="column" alignItems="center">
@@ -88,7 +118,7 @@ const BlogIndex = ({
                 })
                 .map(post => (
                   <MotionBox
-                    variants={animations.item}
+                    variants={item}
                     exit={{ opacity: 0, y: 10 }}
                     key={`post-${post.postId}`}
                   >
