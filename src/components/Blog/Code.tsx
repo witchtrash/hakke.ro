@@ -3,11 +3,13 @@ import Highlight, { defaultProps, Language } from 'prism-react-renderer';
 import styled from '@emotion/styled';
 import nightowlLight from 'prism-react-renderer/themes/nightOwlLight';
 import { MotionWrapper } from './MotionWrapper';
+import { Box } from '@chakra-ui/react';
 
 const Pre = styled.pre`
   border-radius: 4px;
   padding: 12px 16px;
-  width: fit-content;
+  min-width: fit-content;
+  width: 100%;
 `;
 
 const Line = styled.div`
@@ -65,49 +67,51 @@ export const Code = ({ children }: CodeProps) => {
 
   return (
     <MotionWrapper overflowX="auto" my="4">
-      <Highlight
-        {...defaultProps}
-        code={children.props.children}
-        language={language}
-        theme={nightowlLight}
-      >
-        {({ className, style, tokens, getLineProps, getTokenProps }) => (
-          <Pre className={className} style={{ ...style }}>
-            {tokens.map((line, i) => {
-              const lineProps = getLineProps({ line, key: i });
+      <Box minW={['100%', '100%', '100%', '96']} w="fit-content" mx="auto">
+        <Highlight
+          {...defaultProps}
+          code={children.props.children}
+          language={language}
+          theme={nightowlLight}
+        >
+          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+            <Pre className={className} style={{ ...style }}>
+              {tokens.map((line, i) => {
+                const lineProps = getLineProps({ line, key: i });
 
-              if (i === tokens.length - 1) {
-                return null;
-              }
+                if (i === tokens.length - 1) {
+                  return null;
+                }
 
-              return (
-                <Line
-                  key={`item-${i}`}
-                  className={lineProps.className}
-                  style={lineProps.style}
-                >
-                  <LineNumber>{i + 1}</LineNumber>
-                  <LineContent>
-                    {line.map((token, key) => {
-                      const tokenProps = getTokenProps({ token, key });
+                return (
+                  <Line
+                    key={`item-${i}`}
+                    className={lineProps.className}
+                    style={lineProps.style}
+                  >
+                    <LineNumber>{i + 1}</LineNumber>
+                    <LineContent>
+                      {line.map((token, key) => {
+                        const tokenProps = getTokenProps({ token, key });
 
-                      return (
-                        <span
-                          key={`token-${key}`}
-                          style={tokenProps.style}
-                          className={tokenProps.className}
-                        >
-                          {tokenProps.children}
-                        </span>
-                      );
-                    })}
-                  </LineContent>
-                </Line>
-              );
-            })}
-          </Pre>
-        )}
-      </Highlight>
+                        return (
+                          <span
+                            key={`token-${key}`}
+                            style={tokenProps.style}
+                            className={tokenProps.className}
+                          >
+                            {tokenProps.children}
+                          </span>
+                        );
+                      })}
+                    </LineContent>
+                  </Line>
+                );
+              })}
+            </Pre>
+          )}
+        </Highlight>
+      </Box>
     </MotionWrapper>
   );
 };

@@ -27,7 +27,9 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-icons": "^4.3.1",
+    "react-medium-image-zoom": "^4.3.7",
     "remark-frontmatter": "^4.0.1",
+    "remark-unwrap-images": "^3.0.1",
     "swr": "^1.2.2",
     "windups": "^1.2.0"
   },

@@ -8,6 +8,7 @@ import { SWRConfig } from 'swr';
 import { fetcher } from 'util/fetcher';
 import { MarkdownProvider } from 'components/Blog';
 import 'focus-visible/dist/focus-visible';
+import 'react-medium-image-zoom/dist/styles.css';
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;

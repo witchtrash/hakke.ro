@@ -1,4 +1,5 @@
 import remarkFrontmatter from 'remark-frontmatter';
+import remarkUnwrapImages from 'remark-unwrap-images';
 
 /** @type {import('next').NextConfig}*/
 export default {
@@ -12,7 +13,7 @@ export default {
           /** @type {import('@mdx-js/loader').Options} */
           options: {
             providerImportSource: '@mdx-js/react',
-            remarkPlugins: [remarkFrontmatter],
+            remarkPlugins: [remarkFrontmatter, remarkUnwrapImages],
           },
         },
       ],

@@ -11,9 +11,11 @@ import {
   ListItem,
   Image,
   ImageProps,
+  Center,
 } from '@chakra-ui/react';
 import { Code } from './Code';
 import { MotionWrapper } from './MotionWrapper';
+import Zoom from 'react-medium-image-zoom';
 
 type ProviderProps = React.ComponentPropsWithoutRef<typeof MDXProvider>;
 
@@ -76,9 +78,24 @@ const InlineCode = (props: ChildrenProps) => (
 );
 
 const Img = (props: ImageProps) => (
-  <a href={props.src}>
-    <Image mx="auto" p="4" my="4" {...props} />
-  </a>
+  <MotionWrapper p="4" my="4">
+    <Center>
+      <Zoom zoomMargin={40}>
+        <Box>
+          <Image mx="auto" {...props} />
+          <Text
+            pt="2"
+            align="center"
+            fontSize="sm"
+            color="gray.400"
+            fontStyle="italic"
+          >
+            {props.alt}
+          </Text>
+        </Box>
+      </Zoom>
+    </Center>
+  </MotionWrapper>
 );
 
 const Blockquote = (props: ChildrenProps) => (
