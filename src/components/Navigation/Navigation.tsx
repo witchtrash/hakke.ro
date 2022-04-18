@@ -15,7 +15,7 @@ interface NavigationProps {
 export const Navigation = (props: NavigationProps) => {
   return (
     <Portal>
-      <Flex zIndex="9001">
+      <Flex zIndex="9001" position="fixed">
         <Slide direction="top" in={props.isOpen}>
           <Container background="violet.600" display="flex" flexDir="column">
             <Flex flexDir="row" alignItems="flex-end">
