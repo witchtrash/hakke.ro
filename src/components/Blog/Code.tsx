@@ -7,6 +7,7 @@ import { MotionWrapper } from './MotionWrapper';
 const Pre = styled.pre`
   border-radius: 4px;
   padding: 12px 16px;
+  width: fit-content;
 `;
 
 const Line = styled.div`

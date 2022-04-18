@@ -15,61 +15,63 @@ interface NavigationProps {
 export const Navigation = (props: NavigationProps) => {
   return (
     <Portal>
-      <Slide direction="top" in={props.isOpen}>
-        <Container background="violet.600" display="flex" flexDir="column">
-          <Flex flexDir="row" alignItems="flex-end">
-            <Spacer />
-            <IconButton
-              color="white"
-              onClick={props.onClose}
-              aria-label="Close navigation"
-              icon={<RiCloseFill />}
-              _hover={{
-                color: 'aquamarine',
-              }}
-            />
-          </Flex>
-          <Flex
-            flex="1 1 auto"
-            flexDir="column"
-            alignItems="center"
-            justifyContent="center"
-          >
+      <Flex zIndex="9001">
+        <Slide direction="top" in={props.isOpen}>
+          <Container background="violet.600" display="flex" flexDir="column">
+            <Flex flexDir="row" alignItems="flex-end">
+              <Spacer />
+              <IconButton
+                color="white"
+                onClick={props.onClose}
+                aria-label="Close navigation"
+                icon={<RiCloseFill />}
+                _hover={{
+                  color: 'aquamarine',
+                }}
+              />
+            </Flex>
+            <Flex
+              flex="1 1 auto"
+              flexDir="column"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <MotionBox
+                animate={props.isOpen ? 'open' : 'closed'}
+                variants={animations.list}
+              >
+                <NavigationLink href="/" onClick={props.onClose}>
+                  home
+                </NavigationLink>
+                <NavigationLink href="/about" onClick={props.onClose}>
+                  about
+                </NavigationLink>
+                <NavigationLink href="/words" onClick={props.onClose}>
+                  words
+                </NavigationLink>
+                <NavigationLink
+                  href="https://github.com/witchtrash"
+                  onClick={props.onClose}
+                >
+                  code
+                </NavigationLink>
+              </MotionBox>
+            </Flex>
+
             <MotionBox
               animate={props.isOpen ? 'open' : 'closed'}
-              variants={animations.list}
+              variants={animations.bottom}
             >
-              <NavigationLink href="/" onClick={props.onClose}>
-                home
-              </NavigationLink>
-              <NavigationLink href="/about" onClick={props.onClose}>
-                about
-              </NavigationLink>
-              <NavigationLink href="/words" onClick={props.onClose}>
-                words
-              </NavigationLink>
-              <NavigationLink
-                href="https://github.com/witchtrash"
-                onClick={props.onClose}
+              <Flex
+                justifyContent="flex-end"
+                borderBottom="0.25rem solid aquamarine"
               >
-                code
-              </NavigationLink>
+                <Moji />
+              </Flex>
             </MotionBox>
-          </Flex>
-
-          <MotionBox
-            animate={props.isOpen ? 'open' : 'closed'}
-            variants={animations.bottom}
-          >
-            <Flex
-              justifyContent="flex-end"
-              borderBottom="0.25rem solid aquamarine"
-            >
-              <Moji />
-            </Flex>
-          </MotionBox>
-        </Container>
-      </Slide>
+          </Container>
+        </Slide>
+      </Flex>
     </Portal>
   );
 };
