@@ -1,19 +1,25 @@
 import React from 'react';
 import { PageLayout } from 'components/Layout';
-import { Heading, Flex, Button, Wrap, VStack, Box } from '@chakra-ui/react';
+import {
+  Heading,
+  Flex,
+  Button,
+  Wrap,
+  VStack,
+  Box,
+  useBreakpointValue,
+} from '@chakra-ui/react';
 import { InferGetStaticPropsType } from 'next';
 import { NoData } from 'components/NoData';
 import { BlogCard } from 'components/Blog';
 import { SEO } from 'components/SEO';
 import { compareAsc } from 'date-fns';
 import { MotionBox } from 'components/MotionBox';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, Variants } from 'framer-motion';
 
 import { readdirSync, readFileSync } from 'fs';
 import { join, resolve } from 'path';
 import matter from 'gray-matter';
-
-import { Variants } from 'framer-motion';
 
 const list: Variants = {
   visible: {
@@ -61,6 +67,10 @@ const BlogIndex = ({
   tags,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [activeFilter, setActiveFilter] = React.useState<string | undefined>();
+  const buttonSize = useBreakpointValue({
+    base: 'sm',
+    lg: 'xs',
+  });
 
   const handleFilterClick = (tag: string) => {
     if (tag === activeFilter) {
@@ -84,11 +94,12 @@ const BlogIndex = ({
           </Heading>
           <Heading fontSize={['1rem', '1.25rem']}>i made them myself</Heading>
         </Flex>
-        <Wrap pt={[4, 4, 4, 0]} spacing="2">
+        <Wrap pt={[4, 4, 4, 0]} spacing={[4, 4, 4, 2]}>
           {tags.map(tag => (
             <Button
               key={`tag-${tag}`}
-              size="xs"
+              size={buttonSize}
+              p="2"
               color="violet.300"
               variant="outline"
               m="2"
