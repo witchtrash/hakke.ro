@@ -1,0 +1,211 @@
+---
+title: 'b01lers CTF 22 - Hardcore pt. 1'
+date: '2022-04-23'
+description: ''
+tags:
+  - cryptography
+  - ctf
+  - python
+---
+
+import { BlogPost } from 'components/Blog';
+import { PageLayout } from 'components/Layout';
+
+# b01lers CTF 22 - Hardcore pt. 1
+
+This challenge was part of b01lers CTF 2022, under the crypto category. The challenge consisted of a `nc` address and port, and we also get the source code of the service running behind the socket. On connecting to the socket, we get the following output
+
+```text
+$ nc ctf.b01lers.com 9003
+
+Select a difficulty (1/2):1
+
+We're looking to find the secret behind this SHA1 hash <d578448067f47a44e1d97974492a07ca4b3f230ae70bb0f9129bb8d62d197703>. Lucki
+ly for you, this socket takes a bitstring and predicts the dot product of the secret with that bit string (mod 2) with 100% accu
+racy and sends you back the answer.
+```
+
+Let's look at the code.
+
+```python
+import numpy as np
+from os import urandom
+import binascii
+import hashlib
+from secret import FLAG1, FLAG2
+
+# Helpers
+
+def digest_to_array(digest):
+    hex_digest = binascii.hexlify(digest)
+    binary = bin(int(hex_digest, base=16)).lstrip('0b')
+    binary = np.array(list(binary))
+
+    # currently leading 0s are gone, add them back
+    missing_zeros = np.zeros(256 - len(binary))
+    binary = np.concatenate((missing_zeros, binary.astype(int)))
+
+    return binary.astype(int)
+
+def bitstring_to_bytes(s):
+    return int(s, 2).to_bytes((len(s) + 7) // 8, byteorder='big')
+
+####################################################################################
+
+def generate_hardcore(secret, r):
+    return int(np.sum(secret * r) % 2)
+
+def predictor(r, probability = 1):
+    x_r = (r.copy() != digest_to_array(FLAG))
+    np.random.seed(x_r)
+    chance = np.random.rand()
+
+    prediction = 0
+    if chance <= probability:
+        prediction = generate_hardcore(digest_to_array(FLAG), r)
+    else:
+        prediction = 1 - generate_hardcore(digest_to_array(FLAG), r)
+
+    return int(prediction)
+
+def parse_input():
+    bitstring = input()
+    assert len(bitstring) == 256
+    assert set(bitstring) <= set(["0", "1"])
+
+    bitstring = bitstring_to_bytes(bitstring)
+    array = digest_to_array(bitstring) % 2
+    return array
+
+def Level(probability):
+    hasher = hashlib.sha256()
+    hasher.update(FLAG)
+    encrypted_secret = hasher.hexdigest()
+    problem_statement = \
+        f"We're looking to find the secret behind this SHA1 hash <{str(encrypted_secret)}>. " \
+         "Luckily for you, this socket takes a bitstring and predicts the dot product " \
+        f"of the secret with that bit string (mod 2) with {int(100*probability)}% accuracy and sends you back the answer.\n"
+
+    print(problem_statement)
+    while True:
+        array = parse_input()
+        if array is None:
+            return
+        print(predictor(array, probability = probability))
+
+def main():
+    global FLAG
+    diff = int(input("Select a difficulty (1/2):"))
+    if diff == 1:
+        FLAG = FLAG1
+        Level(1)
+    if diff == 2:
+        FLAG = FLAG2
+        Level(0.9)
+
+if __name__ == "__main__":
+    main()
+```
+
+So, the `FLAG` is hashed using `sha256`, and we get the signature of the secret. It takes a bitstring of length 256, and calculates the dot product of the bitstring with the secret, and returns the result `mod` 2.
+
+So, what's a dot product? A dot product is an operation that takes two sequences of numbers of equal length, and returns a single number. So if we have some lists `a` and `b`, the dot product of those is basically
+
+```python
+a = [1, 0, 1, 1...]
+b = [0, 1, 1, 1...]
+
+n = 0
+for i in range(256):
+  n += a[i] * b[i]
+```
+
+Since we have full control of one of the vectors, we can effectively reverse what the secret is by constructing bitstrings that only extract one number at a time. Consider the case where we have some bitstring that looks like this
+
+```python
+b = [1, 0, 0, 0, 0, 0, 0, ..., 0 ]
+```
+
+Since we have a bit string that only has one `1` in it at some index `i`, we're effectively calculating
+
+```python
+n = 1 * b[i]
+```
+
+So what we can do is generate 256 bit strings, every bit string is just set to zeroes, and then we set `i` to `1`, where `i in range(256)`. Modifying the source we get and running this locally looks something like this
+
+```python
+def Level(probability):
+    hasher = hashlib.sha256()
+    hasher.update(FLAG)
+    encrypted_secret = hasher.hexdigest()
+
+    products = []
+
+    for i in range(256):
+        l = ["0" for _ in range(256)]
+        l[i] = "1"
+
+        s = "".join(l)
+
+        array = parse_input(s)
+
+        if array is None:
+            return
+
+        res = predictor(array, probability=probability)
+        products.append(str(res))
+
+    p = "".join(products)
+    bytez = bitstring_to_bytes(p)
+
+    print(bytez)
+```
+
+Running this with the `FLAG` set to `foobar` gives us the following result: `b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00foobar'`. poggers
+
+Now we just have to run this against the `nc` service to extract the secret, which is a bit tricker, since we have to do the same thing except over sockets. We can cheat however by generating all the bitstrings into a text file, copying them all, and just pasting them into the `nc` service. This is somewhat easier than writing a socket listener, but I'm dumb.
+
+```python
+with open("strings.txt", "w") as f:
+    for i in range(256):
+        l = ["0" for _ in range(256)]
+        l[i] = "1"
+        s = "".join(l)
+        f.write(f"{s}\n")
+
+```
+
+We can redirect the output from `netcat` into a file...
+
+```
+nc ctf.b01lers.com 9003 > out.txt 2>&1
+```
+
+...and then we can feed the output into the handy `bitstring_to_bytes` function we got from the source
+
+```python
+products = [ BIG ASS BITSTRING ]
+
+p = "".join([str(p) for p in products])
+bytez = bitstring_to_bytes(p)
+
+print(bytez)
+```
+
+Running it we get
+
+```python
+python hardcore.py
+b'bctf{do_you_like_hardcore_chals}'
+```
+
+Flag get!
+
+export default ({ children }) => (
+  <PageLayout withBackButton>
+    <BlogPost title="hakke.ro | b01lers CTF 22 - Hardcore pt. 1">
+      {children}
+    </BlogPost>
+  </PageLayout>
+);
