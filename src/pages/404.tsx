@@ -6,7 +6,7 @@ import { SEO } from 'components/SEO';
 
 const NotFound = () => (
   <React.Fragment>
-    <SEO title="hakke.ro | stranger still are lost pages" />
+    <SEO title="stranger still are lost pages" />
 
     <PageLayout withBackButton>
       <Flex

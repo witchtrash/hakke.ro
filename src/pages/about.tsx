@@ -25,7 +25,7 @@ const About = () => {
 
   return (
     <Box fontFamily="heading">
-      <SEO title="hakke.ro | tiny idiot's bio" />
+      <SEO title="tiny idiot's bio" />
       <Head>
         <link rel="preload" as="image" href="/assets/shy.gif" />
       </Head>

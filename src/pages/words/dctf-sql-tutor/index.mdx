@@ -160,6 +160,11 @@ Flag get.
 
 export default ({ children }) => (
   <PageLayout withBackButton>
-    <BlogPost title="hakke.ro | DCTF 22 - SQL Tutor">{children}</BlogPost>
+    <BlogPost
+      title="DCTF 22 - SQL Tutor"
+      description="Write-up for the SQL tutor challenge in DCTF 22"
+    >
+      {children}
+    </BlogPost>
   </PageLayout>
 );

@@ -82,7 +82,7 @@ const BlogIndex = ({
 
   return (
     <React.Fragment>
-      <SEO title="hakke.ro | words of dubious wisdom" />
+      <SEO title="words of dubious wisdom" />
 
       <Flex flexDirection={['column', 'column', 'column', 'row']}>
         <Flex flexDirection="column" flex="1">
