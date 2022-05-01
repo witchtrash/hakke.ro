@@ -1,0 +1,273 @@
+---
+title: 'Nahamcon CTF - Keeber Group'
+date: '2022-04-29'
+description: ''
+tags:
+  - osint
+  - ctf
+---
+
+import { BlogPost } from 'components/Blog';
+import { PageLayout } from 'components/Layout';
+
+# Nahamcon CTF - Keeber Group
+
+I love OSINT challenges, especially OSINT challenges that are heavily focused on cybersleuthing and have some sort of story, so I was super excited when I saw that Nahamcon CTF 2022 had not 1 but 8 (!) OSINT challenges all focused around the same fake company.
+
+The challenges consisted of various investigation work around a fictional cybersecurity company called Keeber Security Group.
+
+## Keeber 01
+
+The first challenge consisted of some basic Googling, you had to find the domain for the Keeber Security Group, and look up who registed the domain. Googling "keeber security group" gave us a hit for [keebersecuritygroup.com](https://keebersecuritygroup.com), and running that through [who.is](https://who.is) gave us the following
+
+```text
+Registrant Contact Information:
+  Name                  flag{ef67b2243b195eba43c7dc797b75d75b} Redacted
+  Organization
+  Address               8 Apple Lane
+  City                  Standish
+  State / Province      ME
+  Postal Code           04084
+  Country               US
+  Phone                 Non-Public Data
+```
+
+Flag get.
+
+## Keeber 02
+
+The challenge description for this challenge stated
+
+> The Keeber Security Group is a new startup in its infant stages. The team is always changing and some people have left the company. The Keeber Security Group has been quick with changing their website to reflect these changes, but there must be some way to find ex-employees. Find an ex-employee through the group's website.
+
+This is where I discovered that the Keeber Group had a few public GitHub repos, one of them was the source for the site itself. Looking through the commits to see if any of the data changed was a dead end, so I checked the site using the [Wayback Machine](https://archive.org/web/).
+
+The site had a snapshot from the 19th of April, and checking the `/teams` page, there indeed was another employee then.
+
+![The former employee](/assets/blog/nahamcon-keeber/tiffany.jpg)
+
+Flag get.
+
+## Keeber 03
+
+> The ex-employee you found was fired for "committing a secret to public github repositories". Find the committed secret, and use that to find confidential company information. The flag is in regular format.
+
+This is where the GitHub repos come in, one of the repos was [security-evaluation-workflow](https://github.com/keebersecuritygroup/security-evaluation-workflow), and looking through the git commits from Tiffany, there's one that stands out.
+
+![The commited secret](/assets/blog/nahamcon-keeber/asana-secret.jpg)
+
+The filename is a clue telling us it's related to Asana, the task management tool, but what exactly it is stumped me a bit. After a bit of research, this looked a lot like a personal access token. I tried plugging this into the Asana API and seeing what would come up.
+
+![Asana API response](/assets/blog/nahamcon-keeber/asana-api.jpg)
+
+Flag get.
+
+## Keeber 04
+
+> The ex-employee also left the company password database exposed to the public through GitHub. Since the password is shared throughout the company, it must be easy for employees to remember. The password used to encrypt the database is a single lowercase word somehow relating to the company. Make a custom word list using the Keeber Security Groups public facing information, and use it to open the password database The flag is in regular format.
+
+For this challenge, we also got a hint that John the Ripper has support for cracking .kdbx hashes, but something like hashcat probably would've worked as well. The KeePass database was found on the Keeber Group's public GitHub, in the [password-manager](https://github.com/keebersecuritygroup/password-manager) repo. First thing was downloading the KeePass database and running `keepass2john` to extract the hash.
+
+The challenge tells us to create a wordlist from the public facing information the Keeber Group has, which is probably a hint that a wordlist like `rockyou.txt` won't work. Coupled with the fact that the hash iterations of the KeePass database were set high enough that each check took about a second, we needed to generate as small of a wordlist as possible to finish the challenge in some respectable amount of time.
+
+I was lazy so I didn't generate a minimal wordlist, but instead I copied all the text files from the Keeber Group's public GitHub repoes, and then piped it through `uniq` and `tr A-Z a-z`, which ended up as around 800 words. I then ran it with `john --wordlist=keeber.txt hash.txt` and went and got KFC. When I came back, John was done.
+
+```
+hack/nahamcon/keeber ~/bin/john --show hash.txt
+ksg_passwd_db:craccurrelss
+
+1 password hash cracked, 0 left
+```
+
+We could then open the KeePass database and get the flag.
+
+![Flag entry in the KeePass database](/assets/blog/nahamcon-keeber/keepass.jpg)
+
+Flag get.
+
+## Keeber 05
+
+> The ex-employee in focus made other mistakes while using the company's GitHub. All employees were supposed to commit code using the keeber-@protonmail.com email assigned to them. They made some commits without following this practice. Find the personal email of this employee through GitHub. The flag is in regular format.
+
+This was a simple one. We simply have to look at the git commits for the [security-evaluation-workflow](https://github.com/keebersecuritygroup/security-evaluation-workflow). We have to clone it locally though, and then look at the git history with `git log`. One of the git commits looked like this
+
+```
+commit b25ed7f5aa72f88c0145a3832012546360c2ffc2
+Author: flag{2c90416c24a91a9e1eb18168697e8ff5} <tif.hearts.science@gmail.com>
+Date:   Wed Apr 20 22:46:09 2022 -0400
+
+    started code_reviews.txt
+
+```
+
+Flag get.
+
+## Keeber 06
+
+> After all of the damage the ex-employee's mistakes caused to the company, the Keeber Security Group is suing them for negligence! In order to file a proper lawsuit, we need to know where they are so someone can go and serve them. Can you find the ex-employee’s new workplace? The flag is in regular format, and can be found in a recent yelp review of their new workplace.
+>
+> (Hint: You will need to pivot off of the email found in the past challenge!)
+
+For this challenge, we have to use the email `tif.hearts.science@gmail.com` to find a Yelp review. Simply googling the email or trying to look up the email on the Yelp site won't give us any hits, so we have to get a bit clever.
+
+After doing some sleuthing on social media, I found an Instagram account for Tiffany, [tif.hearts.science](https://www.instagram.com/tif.hearts.science/). There are a few hints on the Instagram account.
+
+#### Hint 01
+
+![First clue](/assets/blog/nahamcon-keeber/tiffany-clue-01.jpg)
+
+> I love my new commute. After a short ferry ride into the city, I have less than a 20 minute walk! #LovinLife #NewJobThings
+
+She works in a city with a ferry, and her workplace is a 20 minute walk from the ferry.
+
+#### Hint 02
+
+![Second clue](/assets/blog/nahamcon-keeber/tiffany-clue-02.jpg)
+
+> Anyone know of good tutorials for towel art like this? I want to make similar designs at work, but I do not know where to start 😅
+
+She works at a place that does towel art on beds.
+
+#### Hint 03
+
+![Third clue](/assets/blog/nahamcon-keeber/tiffany-clue-03.jpg)
+
+> Normally I'd be upset, but my work's pool is indoors 🙌
+
+She works at a place with an indoor pool.
+
+#### Hint 04
+
+![Fourth clue](/assets/blog/nahamcon-keeber/tiffany-clue-04.jpg)
+
+> There are two types of people in this world.... I am definitely one on the right hahaha
+>
+> Usin those new work skillz at home :()
+
+She makes beds at work.
+
+#### Hint 05
+
+![Fifth clue](/assets/blog/nahamcon-keeber/tiffany-clue-05.jpg)
+
+> I'm glad I got to join the team this time of year. I set up all the lights in the courtyard, and it looks beautiful!
+>
+> ⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐
+
+She works at a place with a courtyard.
+
+Also, looking back at the `whois` information, we see the domain is registered in the city of Standish, Maine. This might be a clue.
+
+So our current assumptions are, she works at a hotel in a city in Maine with a ferry.
+
+Looking up "standish maine ferry" on Google Maps does indeed give us some hits centered around Portland, Maine, so it might be a good way to proceed. Let's look at a few of those and check if it looks similar to one of the Instagram posts.
+
+![Ferries around downtown Portland](/assets/blog/nahamcon-keeber/tiffany-ferry-01.jpg)
+
+After some searching around on street view, we find what looks like a match
+
+![Ferry terminal found](/assets/blog/nahamcon-keeber/tiffany-ferry-02.jpg)
+
+The street view doesn't match perfectly with what we saw in the image, but the terminal with the glass walls and the long roof, as well as the crosswalk, and after some more searching around, the trash cans match as well. So she's located at...
+
+![Ferry terminal on Maps](/assets/blog/nahamcon-keeber/tiffany-ferry-03.jpg)
+
+...which is the harbor area around downtown Portland, Maine. If we use the Google Maps directions, we can estimate a rough radius of where she can walk in 20 minutes.
+
+![20 minute walk](/assets/blog/nahamcon-keeber/tiffany-workplace-01.jpg)
+
+Then we can search for hotels and motels that are roughly in this radius on Yelp.
+
+![20 minute walk](/assets/blog/nahamcon-keeber/tiffany-workplace-02.jpg)
+
+We find the hotel [Residence Inn by Marriott](https://www.yelp.ie/biz/residence-inn-by-marriott-portland-downtown-waterfront-portland) on the second page of the Yelp results. Searching through the reviews, we find the review by Tiffany finally.
+
+![Yelp review](/assets/blog/nahamcon-keeber/tiffany-workplace-03.jpg)
+
+Note that when the CTF was running, it was enough to search "hotel flag" in the Portland, Maine area, but Yelp has marked the review as "Not recommended" anymore, so it doesn't show up in the search results.
+
+Flag get.
+
+## Keeber 07
+
+> Multiple employees have gotten strange phishing emails from the same phishing scheme. Use the email corresponding to the phishing email to find the true identity of the scammer. The flag is in regular format.
+> (Note: This challenge can be solved without paying for anything!)
+
+We have another email reverse lookup challenge.
+
+![Phishing email](/assets/blog/nahamcon-keeber/scam-01.jpg)
+
+It's a very good phishing email, I wasn't really sold on it until I saw that Justin Bieber was involved. Let's try and find `cheerios.fanatic1941`. Again, searching on Google gave us no hints, and checking for the username on a few top social sites gave us no hits as well, so we need to check out some tools for this. I spent a **lot** of time trying to track down this account, and I think I tried maybe about 20 tools, but here's the intended solve path.
+
+First tool I tried was [Epieos](https://epieos.com/?q=cheerios.fanatic1941%40gmail.com), which didn't give me anything really noteworth except a name.
+
+![Scammer](/assets/blog/nahamcon-keeber/scam-02.jpg)
+
+Isaac Anderson is a pretty generic name, so there's not a whole lot we can do with this. Let's try out [Maltego](https://www.maltego.com/). Maltego is a pretty intense OSINT tool used by professional investigators, so it's a bit overkill, but let's see what we can do with it.
+
+Plopping the email in there as an entity, we have a few transforms we can use.
+
+![Maltego transforms](/assets/blog/nahamcon-keeber/scam-03.jpg)
+
+After trying a few ones with no hits, I tried the "To Myspace Account".
+
+![Maltego Myspace transform](/assets/blog/nahamcon-keeber/scam-04.jpg)
+
+Poggers, we have a Myspace account with the name we found from Epios, let's look at it and see if there's anything in there.
+
+![Myspace profile](/assets/blog/nahamcon-keeber/scam-05.jpg)
+
+Flag get.
+
+## Keeber 08
+
+> Despite all of the time we spend teaching people about phishing, someone at Keeber fell for one! Maria responded to the email and sent some of her personal information. Pivot off of what you found in the previous challenge to find where Maria's personal information was posted. The flag is in regular format.
+
+This was the last OSINT challenge, and it depends on data we found in Keeber 07. The only new pieces of data we have are the name, Isaac Anderson, and the username, cereal_lover1990. After some noodling around in Maltego, I didn't have any look finding any more info, so I tried out another tool, [sherlock](https://github.com/sherlock-project/sherlock). Sherlock is very good for searching for accounts using the same username, and since we have a username now instead of an email, let's throw it in there and see what it spits out.
+
+```
+python sherlock cereal_lover1990
+```
+
+After a bit of waiting, we get a hit
+
+![Sherlock results](/assets/blog/nahamcon-keeber/phish-01.jpg)
+
+We have the Myspace account, which we know, and a Pastebin account. The pastebin account has two public pastes, Epic Art and Chump List. Let's look at the obvious one first, Epic Art.
+
+```
+   +--------------+
+   |.------------.|
+   ||            ||
+   ||   Hacks    ||
+   ||            ||
+   ||            ||
+   |+------------+|
+   +-..--------..-+
+   .--------------.
+  / /============\ \
+ / /==============\ \
+/____________________\
+\____________________/
+```
+
+Dang, epic. After admiring the art, we can skim the chump list, and we find an entry for Maria.
+
+```
+{
+    "name": "Maria Haney",
+    "phone": "1-648-584-6277",
+    "email": "keeber-maria@protonmail.com",
+    "password": "flag{70b5a5d461d8a9c5529a66fa018ba0d0}"
+},
+```
+
+Last flag get. These series of challenges were really fun, and I learned a ton about different OSINT tools and techniques. If you enjoy this sort of investigation work, try out a CTF sometime! Challenges at this level of quality are pretty rare, so this was a very nice treat.
+
+export default ({ children }) => (
+  <PageLayout withBackButton>
+    <BlogPost title="hakke.ro | Nahamcon CTF - Keeber Group">
+      {children}
+    </BlogPost>
+  </PageLayout>
+);
